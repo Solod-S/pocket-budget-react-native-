@@ -16,5 +16,3 @@ export const ScreenWrapper = ({ style, children }: ScreenWrapperProps) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({});

@@ -7,7 +7,8 @@ const defaultText = {
 };
 
 export const colors = {
-  primary: "#16a34a",
+  // primary: "#16a34a",
+  primary: "tomato",
   primaryLight: "#0ea5e9",
   primaryDark: "#0369a1",
   text: "#fff",
@@ -21,7 +22,7 @@ export const colors = {
   neutral50: "#fafafa",
   neutral100: "#f5f5f5",
   neutral200: "#e5e5e5",
-  neutral350: "#CCCCCC",
+  neutral300: "#CCCCCC",
   neutral400: "#a3a3a3",
   neutral500: "#737373",
   neutral600: "#525252",

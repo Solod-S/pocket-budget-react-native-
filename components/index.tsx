@@ -1,2 +1,1 @@
-export { ScreenWrapper } from "./ScreenWrapper";
-export { Typo } from "./Typo";
+export * from "./ui";
