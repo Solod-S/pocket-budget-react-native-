@@ -1,14 +1,15 @@
+import { ScreenWrapper, Typo } from "@/components";
 import { Image, StyleSheet, Platform, View, Text } from "react-native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function HomeScreen() {
+export default function Wallet() {
   return (
-    <SafeAreaView edges={["top"]} style={{ flex: 1 }}>
+    <ScreenWrapper>
       <View>
-        <Text>Home</Text>
+        <Typo>Wallet</Typo>
       </View>
-    </SafeAreaView>
+    </ScreenWrapper>
   );
 }
 
