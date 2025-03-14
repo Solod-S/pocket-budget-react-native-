@@ -5,3 +5,4 @@ export { Loading } from "./Loading";
 export { BackButton } from "./BackButton";
 export { Input } from "./Input";
 export { CustomKeyboardView } from "./customKeyboardView";
+export { CustomTabs } from "./CustomTabs";

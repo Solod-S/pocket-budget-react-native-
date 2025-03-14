@@ -13,36 +13,37 @@ import { colors, spacingX, spacingY } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
 import Animated, { FadeIn } from "react-native-reanimated";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useRouter } from "expo-router";
 import authStore from "@/store/authStore";
+import { useRouter } from "expo-router";
 
-export default function Login() {
-  const { login } = authStore;
+export default function Restore() {
   const router = useRouter();
+  const { resetPassword } = authStore;
+
   const [isLoading, setIsLoading] = useState(false);
-  const [securePass, setSecurePass] = useState(true);
 
   const emailRef = useRef("");
-  const passwordRef = useRef("");
 
-  const handleLogin = async () => {
+  const handleRestore = async () => {
     try {
-      if (!emailRef.current || !passwordRef.current) {
+      if (!emailRef.current) {
         Alert.alert("Error", "Please fill all the fields");
         return;
       }
-
       setIsLoading(true);
-      const response = await login(
-        emailRef.current.trim(),
-        passwordRef.current
-      );
+      const response = await resetPassword(emailRef.current.trim());
       setIsLoading(false);
       if (!response.success) {
         Alert.alert("Error", response.message);
+      } else {
+        Alert.alert(
+          "Success",
+          "A password reset email has been sent to your inbox.",
+          [{ text: "OK", onPress: () => router.replace("/welcome") }]
+        );
       }
     } catch (error) {
-      console.log(`Error in handleLogin`);
+      console.log(`Error in handleRestore`);
     } finally {
       setIsLoading(false);
     }
@@ -58,15 +59,17 @@ export default function Login() {
           <BackButton iconSize={28} />
           <View style={{ gap: 5 }}>
             <Typo size={30} fontWeight={"800"}>
-              Control
+              Reset
             </Typo>
             <Typo size={30} fontWeight={"800"}>
-              Your Budget Easily
+              Your Password
             </Typo>
           </View>
           {/* Form */}
           <View style={styles.form}>
-            <Typo size={16}>Sign in to track your income and expenses</Typo>
+            <Typo size={16}>
+              Enter your email to receive a password reset link
+            </Typo>
             <Input
               onChangeText={value => {
                 emailRef.current = value;
@@ -80,60 +83,12 @@ export default function Login() {
               }
               placeholder="Enter email"
             />
-            <View style={{ position: "relative", justifyContent: "center" }}>
-              <Input
-                onChangeText={value => {
-                  passwordRef.current = value;
-                }}
-                inputStyle={{ paddingRight: 30 }}
-                secureTextEntry={securePass}
-                icon={
-                  <Ionicons
-                    name="lock-closed-outline"
-                    size={24}
-                    color={colors.neutral400}
-                  />
-                }
-                placeholder="Enter password"
-              />
-              <TouchableOpacity
-                onPress={() => setSecurePass(prevState => !prevState)}
-                style={{
-                  position: "absolute",
-                  right: 15,
-                  top: "50%",
-                  transform: [{ translateY: -12 }],
-                }}
-              >
-                <Ionicons
-                  name={securePass ? "eye" : "eye-off"}
-                  size={24}
-                  color={colors.neutral400}
-                />
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity onPress={() => router.replace("/restore")}>
-              <Typo
-                size={14}
-                color={colors.text}
-                style={{ alignSelf: "flex-end" }}
-              >
-                Forgot Password?
-              </Typo>
-            </TouchableOpacity>
-            <Button loading={isLoading} onPress={() => handleLogin()}>
+
+            <Button loading={isLoading} onPress={() => handleRestore()}>
               <Typo size={22} color={colors.neutral100} fontWeight={"600"}>
-                Login
+                Restore
               </Typo>
             </Button>
-            <View style={styles.footer}>
-              <Typo size={15}>Donn't have an account?</Typo>
-              <TouchableOpacity onPress={() => router.replace("/register")}>
-                <Typo fontWeight={"700"} color={colors.primary} size={15}>
-                  Sign up
-                </Typo>
-              </TouchableOpacity>
-            </View>
           </View>
         </Animated.View>
       </CustomKeyboardView>

@@ -154,15 +154,16 @@ class AuthStore {
       return { success: true };
     } catch (error: any) {
       console.log("Error in resetPassword:", error);
-      // Toast.show({
-      //   type: "error",
-      //   position: "top",
-      //   text1: "Failed",
-      //   text2: error.message,
-      //   visibilityTime: 2000,
-      //   autoHide: true,
-      //   topOffset: 50,
-      // });
+      let msg = error.message;
+      if (msg.includes("invalid-email")) msg = "Invalid email";
+      return {
+        success: false,
+        message: msg
+          .replace("FirebaseError: ", "")
+          .replace("Firebase: ", "")
+          .replace("auth/", "")
+          .replace(/-/g, " "),
+      };
     }
   }
 

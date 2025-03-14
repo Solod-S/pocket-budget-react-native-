@@ -13,6 +13,8 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "app/_layout copy",
-    "app/_"
+    "app/_",
+    "app/(tabs)/_",
+    "app/txt"
   ]
 }

@@ -3,7 +3,7 @@ import { Stack, useRouter, useSegments } from "expo-router";
 import Toast from "react-native-toast-message";
 import { ReactNode, useEffect } from "react";
 import { observer } from "mobx-react-lite";
-import authStore from "../store/authStore";
+import authStore from "../contexts/authStore";
 
 type MainLayoutProps = {
   children: ReactNode;
@@ -20,18 +20,35 @@ const MainLayout = observer(({ children }: MainLayoutProps) => {
     return () => unsubscribe();
   }, []);
 
+  // useEffect(() => {
+  //   console.log(`isAuthenticated`, isAuthenticated);
+  //   // Check if the user is authenticated or not
+  //   if (typeof isAuthenticated === "undefined") return;
+  //   // user in app group
+  //   const inApp = segments[0] === "(tabs)";
+  //   const inAuth = segments[0] === "(auth)";
+
+  //   if (isAuthenticated && !inApp) {
+  //     // if user authenticated and not in (tabs) => redirect to home
+  //     router.replace("/home");
+  //   } else if (isAuthenticated === false && !inAuth) {
+  //     // if user is not authenticated and not in (auth) => redirect to signIn
+  //     router.replace("/welcome");
+  //   }
+  // }, [isAuthenticated, segments]);
+
   useEffect(() => {
     console.log(`isAuthenticated`, isAuthenticated);
     // Check if the user is authenticated or not
-    if (typeof isAuthenticated === "undefined") return;
+    if (typeof isAuthenticated == "undefined") return;
     // user in app group
-    const inApp = segments[0] === "(tabs)";
-    const inAuth = segments[0] === "(auth)";
 
-    if (isAuthenticated && !inApp) {
+    if (isAuthenticated) {
+      console.log(`in home`);
       // if user authenticated and not in (tabs) => redirect to home
       router.replace("/home");
-    } else if (isAuthenticated === false && !inAuth) {
+    } else if (isAuthenticated === false) {
+      console.log(`not in home`);
       // if user is not authenticated and not in (auth) => redirect to signIn
       router.replace("/welcome");
     }

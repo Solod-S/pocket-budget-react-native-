@@ -1,10 +1,7 @@
 import { Button, ScreenWrapper, Typo } from "@/components";
 import { colors } from "@/constants/theme";
 import authStore from "@/store/authStore";
-import { signOut } from "firebase/auth";
-import { Image, StyleSheet, Platform, View, Text } from "react-native";
-
-import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet, View } from "react-native";
 
 export default function Home() {
   const { logout } = authStore;
@@ -18,7 +15,7 @@ export default function Home() {
   return (
     <ScreenWrapper>
       <View style={styles.titleContainer}>
-        <Button onPress={handleLogOut}>
+        <Button onPress={() => handleLogOut()}>
           <Typo size={22} color={colors.neutral100} fontWeight={"600"}>
             Logout
           </Typo>

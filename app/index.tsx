@@ -12,11 +12,7 @@ import { ScreenWrapper } from "@/components";
 
 export default function Index() {
   const router = useRouter();
-  useEffect(() => {
-    setTimeout(() => {
-      router.replace("/welcome");
-    }, 300);
-  }, []);
+
   return (
     <ScreenWrapper>
       <View style={styles.container}>

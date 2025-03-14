@@ -28,22 +28,9 @@ export default function Register() {
   const handleRegister = async () => {
     try {
       if (!nameRef.current || !emailRef.current || !passwordRef.current) {
-        Alert.alert("Register", "Please fill all the fields");
-        //  Toast.show({
-        //    type: "error",
-        //    position: "top",
-        //    text1: "Register Failed",
-        //    text2: "Please fill all the fields",
-        //    visibilityTime: 2000,
-        //    autoHide: true,
-        //    topOffset: 50,
-        //  });
+        Alert.alert("Error", "Please fill all the fields");
         return;
       }
-      console.log(`Email: `, emailRef.current);
-      console.log(`Password: `, passwordRef.current);
-      console.log(`Name: `, nameRef.current);
-
       setIsLoading(true);
       const { success, message } = await register(
         emailRef.current.trim(),
@@ -51,15 +38,13 @@ export default function Register() {
         nameRef.current
       );
       if (!success) {
-        Alert.alert("Register", message);
+        Alert.alert("Error", message);
       }
     } catch (error: any) {
       console.log(`Error in handleRegister`);
-      Alert.alert("Register", error?.message);
+      Alert.alert("Error", error?.message);
     } finally {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
+      setIsLoading(false);
     }
   };
 
