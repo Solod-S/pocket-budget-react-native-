@@ -111,16 +111,6 @@ class AuthStore {
         uid: user.uid,
         lastGeneratedAt: null,
       });
-
-      // Toast.show({
-      //   type: "success",
-      //   position: "top",
-      //   text1: "Success",
-      //   text2: "Account activation email sent",
-      //   visibilityTime: 5000,
-      //   autoHide: true,
-      //   topOffset: 50,
-      // });
       return { success: true, data: user };
     } catch (error: any) {
       console.log("Error register:", error);
@@ -142,15 +132,6 @@ class AuthStore {
   async resetPassword(email: string) {
     try {
       await sendPasswordResetEmail(auth, email);
-      // Toast.show({
-      //   type: "success",
-      //   position: "top",
-      //   text1: "Success",
-      //   text2: "Password reset email sent",
-      //   visibilityTime: 2000,
-      //   autoHide: true,
-      //   topOffset: 50,
-      // });
       return { success: true };
     } catch (error: any) {
       console.log("Error in resetPassword:", error);

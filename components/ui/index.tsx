@@ -1,4 +1,5 @@
 export { ScreenWrapper } from "./ScreenWrapper";
+export { ModalWrapper } from "./ModalWrapper";
 export { Typo } from "./Typo";
 export { Button } from "./Button";
 export { Loading } from "./Loading";

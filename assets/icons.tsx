@@ -1,8 +1,14 @@
-import { AntDesign, Feather } from "@expo/vector-icons";
+import { AntDesign, Feather, FontAwesome5 } from "@expo/vector-icons";
 
 export const icons = {
-  home: (props: any) => <AntDesign name="home" size={26} {...props} />,
-  status: (props: any) => <Feather name="bar-chart" size={26} {...props} />,
-  wallet: (props: any) => <AntDesign name="wallet" size={26} {...props} />,
-  profile: (props: any) => <AntDesign name="user" size={26} {...props} />,
+  home: (props: any) => <FontAwesome5 name="home" size={23} {...props} />,
+  status: (props: any) => (
+    <FontAwesome5 name="chart-area" size={23} {...props} />
+  ),
+  wallet: (props: any) => (
+    <FontAwesome5 name="money-bill" size={23} {...props} />
+  ),
+  profile: (props: any) => (
+    <FontAwesome5 name="user-alt" size={21} {...props} />
+  ),
 };

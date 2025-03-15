@@ -22,7 +22,7 @@ const TabBarButton = (props: any) => {
   }, [scale, isFocused]);
 
   const animatedIconStyle = useAnimatedStyle(() => {
-    const scaleValue = interpolate(scale.value, [0, 1], [1, 1.4]);
+    const scaleValue = interpolate(scale.value, [0, 1], [1, 1.2]);
     const top = interpolate(scale.value, [0, 1], [0, 8]);
 
     return {
@@ -51,7 +51,7 @@ const TabBarButton = (props: any) => {
         style={[
           {
             color,
-            fontSize: verticalScale(14),
+            fontSize: verticalScale(12),
           },
           animatedTextStyle,
         ]}

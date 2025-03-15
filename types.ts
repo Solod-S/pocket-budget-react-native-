@@ -60,7 +60,7 @@ export type HeaderProps = {
   title?: string;
   style?: ViewStyle;
   leftIcon?: ReactNode;
-  rightIcon?: ReactNode;
+  // rightIcon?: ReactNode;
 };
 
 export type BackButtonProps = {

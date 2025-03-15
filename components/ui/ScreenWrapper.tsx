@@ -1,4 +1,3 @@
-import { Platform, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { ScreenWrapperProps } from "@/types";

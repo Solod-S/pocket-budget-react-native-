@@ -29,6 +29,8 @@ export default function Welcome() {
             <LottieView
               style={styles.welcomeImage}
               source={require("../../assets/images/welcome.json")}
+              resizeMode="contain"
+              renderMode="HARDWARE"
               autoPlay
               loop
               speed={2}
