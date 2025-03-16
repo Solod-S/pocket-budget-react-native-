@@ -13,12 +13,12 @@ import { colors, spacingX, spacingY } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
 import Animated, { FadeIn } from "react-native-reanimated";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import authStore from "@/store/authStore";
 import { useRouter } from "expo-router";
+import useAuthStore from "@/store/authStore";
 
 export default function Restore() {
   const router = useRouter();
-  const { resetPassword } = authStore;
+  const { resetPassword } = useAuthStore();
 
   const [isLoading, setIsLoading] = useState(false);
 

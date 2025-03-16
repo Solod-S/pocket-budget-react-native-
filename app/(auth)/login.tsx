@@ -14,10 +14,11 @@ import { verticalScale } from "@/utils/styling";
 import Animated, { FadeIn } from "react-native-reanimated";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
-import authStore from "@/store/authStore";
+
+import useAuthStore from "@/store/authStore";
 
 export default function Login() {
-  const { login } = authStore;
+  const { login } = useAuthStore();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [securePass, setSecurePass] = useState(true);

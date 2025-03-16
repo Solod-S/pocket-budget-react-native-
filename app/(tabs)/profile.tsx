@@ -1,7 +1,6 @@
 import { ScreenWrapper, Typo } from "@/components";
 import { Header } from "@/components/profile";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
-import authStore from "@/store/authStore";
 import { verticalScale } from "@/utils/styling";
 import { Entypo, AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
@@ -10,11 +9,11 @@ import { getProfileImage } from "@/services";
 import { accountOptionType } from "@/types";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
+import useAuthStore from "@/store/authStore";
 
 export default function Profile() {
-  const { logout } = authStore;
+  const { logout, user } = useAuthStore();
   const router = useRouter();
-  const { user } = authStore;
 
   const accountOption: accountOptionType[] = [
     {

@@ -1,11 +1,82 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import {
+  Alert,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import { scale, verticalScale } from "@/utils/styling";
-import { BackButton, ModalWrapper, ScreenWrapper } from "@/components";
+import {
+  BackButton,
+  Button,
+  Input,
+  ModalWrapper,
+  ScreenWrapper,
+  Typo,
+} from "@/components";
 import { Header } from "@/components/profile";
+import { Image } from "expo-image";
+import { getProfileImage, updateUser } from "@/services";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { UserDataType, UserType } from "@/types";
+import useAuthStore from "@/store/authStore";
+import { useRouter } from "expo-router";
 
 export default function ProfileModal() {
+  const router = useRouter();
+  const { user, updateUserData } = useAuthStore();
+  const [imageUrl, setImageUrl] = useState(user?.image || "");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [userData, setUserData] = useState<UserDataType>({
+    name: "",
+    image: null,
+  });
+
+  useEffect(() => {
+    setUserData({ name: user?.name || "", image: user?.image || null });
+  }, [user]);
+
+  const handleImageEdit = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleImageUrlChange = (url: string) => {
+    setImageUrl(url);
+    setUserData(prevState => ({ ...prevState, image: url }));
+  };
+
+  const handleSubmit = async () => {
+    let { name, image } = userData;
+    if (!name.trim()) {
+      Alert.alert("User", "Please fill all the fields");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const { success } = await updateUser(user?.uid as string, userData);
+
+      if (success) {
+        updateUserData(user?.uid as string);
+        router.back();
+      }
+    } catch (error) {
+      console.log("Error in handleSubmit: ", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setIsModalVisible(false);
+    setImageUrl(user?.image || "");
+  };
+
   return (
     <ModalWrapper>
       <View style={styles.container}>
@@ -14,7 +85,85 @@ export default function ProfileModal() {
           leftIcon={<BackButton />}
           style={{ marginBottom: spacingY._10 }}
         />
+        <ScrollView style={styles.form}>
+          <View style={styles.avatarContainer}>
+            <Image
+              style={styles.avatar}
+              source={getProfileImage(userData.image)}
+              transition={100}
+            />
+            <TouchableOpacity onPress={handleImageEdit} style={styles.editIcon}>
+              <MaterialIcons
+                name="edit"
+                size={verticalScale(22)}
+                color={colors.neutral600}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.inputContainer}>
+            <Typo color={colors.neutral200}>Name</Typo>
+            <Input
+              placeholder="Name"
+              value={userData.name}
+              onChangeText={value =>
+                setUserData(prevState => ({ ...prevState, name: value }))
+              }
+            />
+          </View>
+        </ScrollView>
+        <View style={styles.footer}>
+          <Button loading={loading} onPress={handleSubmit} style={{ flex: 1 }}>
+            <Typo size={22} color={colors.neutral100} fontWeight={"600"}>
+              Update
+            </Typo>
+          </Button>
+        </View>
       </View>
+
+      {/* Modal window for editing image URL */}
+      <Modal
+        visible={isModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={handleCancelEdit}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Edit Image URL</Text>
+
+            <Input
+              placeholder="Enter image URL"
+              value={imageUrl}
+              onChangeText={handleImageUrlChange}
+            />
+            <TouchableOpacity
+              style={styles.deleteIcon}
+              onPress={() => setImageUrl("")}
+            >
+              <MaterialIcons
+                name="delete"
+                size={verticalScale(22)}
+                color={colors.neutral100}
+              />
+            </TouchableOpacity>
+
+            <View style={styles.modalButtons}>
+              <Button onPress={handleCancelEdit} style={styles.cancelButton}>
+                <Typo color={colors.neutral100}>Cancel</Typo>
+              </Button>
+              <Button
+                onPress={() => {
+                  setIsModalVisible(false);
+                  setUserData(prevState => ({ ...prevState, image: imageUrl }));
+                }}
+                style={styles.saveButton}
+              >
+                <Typo color={colors.neutral100}>Save</Typo>
+              </Button>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ModalWrapper>
   );
 }
@@ -23,7 +172,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "space-between",
-    // paddingVertical: spacingY._30,
+    paddingHorizontal: spacingX._20,
   },
   footer: {
     alignItems: "center",
@@ -46,8 +195,6 @@ const styles = StyleSheet.create({
     borderRadius: 200,
     borderWidth: 1,
     borderColor: colors.neutral500,
-    // overflow: "hidden",
-    // position: "relative",
   },
   editIcon: {
     position: "absolute",
@@ -62,5 +209,42 @@ const styles = StyleSheet.create({
     elevation: 4,
     padding: spacingY._7,
   },
-  inputContainer: { gap: spacingY._10 },
+  inputContainer: { gap: spacingY._10, marginTop: spacingY._15 },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: colors.neutral800,
+    padding: spacingY._20,
+    borderRadius: scale(10),
+    width: scale(300),
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: scale(16),
+    color: colors.neutral100,
+    marginBottom: spacingY._10,
+  },
+  modalButtons: {
+    flexDirection: "row",
+    gap: scale(10),
+    marginTop: spacingY._15,
+  },
+  cancelButton: {
+    backgroundColor: colors.neutral600,
+    flex: 1,
+  },
+  saveButton: {
+    backgroundColor: colors.primary,
+    flex: 1,
+  },
+  deleteIcon: {
+    position: "absolute",
+    top: verticalScale(10),
+    right: verticalScale(10),
+    zIndex: 1,
+  },
 });

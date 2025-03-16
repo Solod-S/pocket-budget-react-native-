@@ -1,69 +1,68 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { create } from "zustand";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
-  sendEmailVerification,
   sendPasswordResetEmail,
   User as FirebaseUser,
+  updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../config/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { UserType } from "@/types";
-// import Toast from "react-native-toast-message";
+import { delay } from "@/utils/delay";
 
-class AuthStore {
-  user: UserType | null = null;
-  isAuthenticated: boolean | undefined = undefined;
+interface AuthState {
+  user: UserType | null;
+  isAuthenticated: boolean | undefined;
+  setUser: (user: UserType | null) => void;
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
+  updateUserData: (id: string) => Promise<void>;
+  login: (
+    email: string,
+    password: string
+  ) => Promise<{ success: boolean; data?: FirebaseUser; message?: string }>;
+  logout: () => Promise<void>;
+  register: (
+    email: string,
+    password: string,
+    name: string
+  ) => Promise<{ success: boolean; data?: FirebaseUser; message?: string }>;
+  resetPassword: (
+    email: string
+  ) => Promise<{ success: boolean; message?: string }>;
+  initAuthListener: () => () => void;
+}
 
-  constructor() {
-    makeAutoObservable(this);
-    this.initAuthListener();
-  }
+const useAuthStore = create<AuthState>(set => ({
+  user: null,
+  isAuthenticated: undefined,
 
-  // Wrap this in an action to avoid strict mode issues
-  setUser(user: UserType) {
-    this.user = user;
-  }
+  setUser: user => set({ user }),
+  setIsAuthenticated: isAuthenticated => set({ isAuthenticated }),
 
-  setIsAuthenticated(isAuthenticated: boolean) {
-    this.isAuthenticated = isAuthenticated;
-  }
-
-  async updateUserData(id: string) {
+  updateUserData: async id => {
     const docRef = doc(db, "users", id);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
-      runInAction(() => {
-        this.user = {
-          ...this.user,
+      set({
+        user: {
           email: data.email,
           name: data.name,
           uid: data.uid,
-        };
+          image: data.image,
+        },
+        isAuthenticated: true,
       });
     }
-  }
+  },
 
-  // Use action for state updates inside async methods
-  async login(
-    email: string,
-    password: string
-  ): Promise<{ success: boolean; data?: FirebaseUser; message?: string }> {
+  login: async (email, password) => {
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
       const { user } = response;
-      runInAction(() => {
-        this.user = {
-          uid: user.uid,
-          email: user.email,
-          name: user.displayName || null,
-          image: user.photoURL || null,
-        };
-        this.isAuthenticated = true;
-      });
       return { success: true, data: user };
     } catch (error: any) {
       console.error("Error login:", error);
@@ -76,27 +75,19 @@ class AuthStore {
         message: msg.replace(/Firebase.*auth\//, "").replace(/-/g, " "),
       };
     }
-  }
+  },
 
-  // Use action for state updates inside async methods
-  async logout() {
+  logout: async () => {
     try {
       await signOut(auth);
-      runInAction(() => {
-        this.user = null;
-        this.isAuthenticated = false;
-      });
+      set({ user: null, isAuthenticated: false });
     } catch (error) {
-      runInAction(() => {
-        this.user = null;
-        this.isAuthenticated = false;
-      });
-      console.log("Error logout:", error);
+      console.error("Error logout:", error);
+      set({ user: null, isAuthenticated: false });
     }
-  }
+  },
 
-  // Use action for state updates inside async methods
-  async register(email: string, password: string, name: string) {
+  register: async (email, password, name) => {
     try {
       const response = await createUserWithEmailAndPassword(
         auth,
@@ -104,7 +95,11 @@ class AuthStore {
         password
       );
       const { user } = response;
-      // await sendEmailVerification(user);
+
+      await updateProfile(user, {
+        displayName: name,
+      });
+
       await setDoc(doc(db, "users", user.uid), {
         email,
         name,
@@ -126,10 +121,9 @@ class AuthStore {
           .replace(/-/g, " "),
       };
     }
-  }
+  },
 
-  // Use action for state updates inside async methods
-  async resetPassword(email: string) {
+  resetPassword: async email => {
     try {
       await sendPasswordResetEmail(auth, email);
       return { success: true };
@@ -146,40 +140,18 @@ class AuthStore {
           .replace(/-/g, " "),
       };
     }
-  }
-
-  initAuthListener(): () => void {
-    this.isAuthenticated = undefined;
+  },
+  initAuthListener: () => {
     const unsubscribe = onAuthStateChanged(auth, async user => {
-      try {
-        runInAction(() => {
-          if (user) {
-            this.user = {
-              uid: user.uid,
-              email: user.email,
-              name: user.displayName || null,
-              image: user.photoURL || null,
-            };
-            this.isAuthenticated = true;
-
-            if (typeof this.updateUserData === "function") {
-              this.updateUserData(user?.uid);
-            }
-          } else {
-            this.user = null;
-            this.isAuthenticated = false;
-          }
-        });
-      } catch (error) {
-        console.error("Error in auth state listener:", error);
-        this.user = null;
-        this.isAuthenticated = false;
+      if (user) {
+        await delay();
+        await useAuthStore.getState().updateUserData(user.uid);
+      } else {
+        set({ user: null, isAuthenticated: false });
       }
     });
-
     return unsubscribe;
-  }
-}
+  },
+}));
 
-const authStore = new AuthStore();
-export default authStore;
+export default useAuthStore;
