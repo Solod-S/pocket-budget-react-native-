@@ -13,59 +13,61 @@ import { scale, verticalScale } from "@/utils/styling";
 import {
   BackButton,
   Button,
+  ImageLinkHandler,
   Input,
   ModalWrapper,
   ScreenWrapper,
   Typo,
 } from "@/components";
-import { Header } from "@/components/";
+import { Header } from "@/components";
 import { Image } from "expo-image";
-import { getProfileImage, updateUser } from "@/services";
+import {
+  createOrUpdateWalletData,
+  getProfileImage,
+  updateUser,
+} from "@/services";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { UserDataType, UserType } from "@/types";
+import { UserDataType, UserType, WalletType } from "@/types";
 import useAuthStore from "@/store/authStore";
 import { useRouter } from "expo-router";
 
-export default function ProfileModal() {
+export default function WalletModal() {
   const router = useRouter();
   const { user, updateUserData } = useAuthStore();
   const [imageUrl, setImageUrl] = useState(user?.image || "");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [userData, setUserData] = useState<UserDataType>({
+  const [walletData, setWalletData] = useState<WalletType>({
     name: "",
     image: null,
   });
 
-  useEffect(() => {
-    setUserData({ name: user?.name || "", image: user?.image || null });
-  }, [user]);
-
-  const handleImageEdit = () => {
-    setIsModalVisible(true);
-  };
-
   const handleImageUrlChange = (url: string) => {
     setImageUrl(url);
-    setUserData(prevState => ({ ...prevState, image: url }));
+    setWalletData(prevState => ({ ...prevState, image: url }));
   };
 
   const handleSubmit = async () => {
-    let { name, image } = userData;
-    if (!name.trim()) {
-      Alert.alert("User", "Please fill all the fields");
+    let { name, image } = walletData;
+    if (!name.trim() || !image) {
+      Alert.alert("Wallet", "Please fill all the fields");
       return;
     }
 
     try {
+      // todo include wallet id to update
+      const data: WalletType = {
+        name,
+        image,
+        uid: user?.uid,
+      };
       setLoading(true);
-      const result = await updateUser(user?.uid as string, userData);
-
+      const result = await createOrUpdateWalletData(data);
+      console.log(`result`, result);
       if (result.success) {
-        updateUserData(user?.uid as string);
         router.back();
       } else {
-        Alert.alert("User", result.msg);
+        Alert.alert("Wallet", result.msg);
       }
     } catch (error) {
       console.log("Error in handleSubmit: ", error);
@@ -83,40 +85,35 @@ export default function ProfileModal() {
     <ModalWrapper>
       <View style={styles.container}>
         <Header
-          title="Update Profile"
+          title="New Wallet"
           leftIcon={<BackButton />}
           style={{ marginBottom: spacingY._10 }}
         />
         <ScrollView style={styles.form}>
-          <View style={styles.avatarContainer}>
-            <Image
-              style={styles.avatar}
-              source={getProfileImage(userData.image)}
-              transition={100}
+          <View style={styles.inputContainer}>
+            <Typo color={colors.neutral200}>Wallet Name</Typo>
+            <Input
+              placeholder="Salary"
+              value={walletData.name}
+              onChangeText={value =>
+                setWalletData(prevState => ({ ...prevState, name: value }))
+              }
             />
-            <TouchableOpacity onPress={handleImageEdit} style={styles.editIcon}>
-              <MaterialIcons
-                name="edit"
-                size={verticalScale(22)}
-                color={colors.neutral600}
-              />
-            </TouchableOpacity>
           </View>
           <View style={styles.inputContainer}>
-            <Typo color={colors.neutral200}>Name</Typo>
-            <Input
-              placeholder="Name"
-              value={userData.name}
-              onChangeText={value =>
-                setUserData(prevState => ({ ...prevState, name: value }))
-              }
+            <Typo color={colors.neutral200}>Wallet Icon</Typo>
+            <ImageLinkHandler
+              url={walletData.image}
+              onClear={() => handleImageUrlChange("")}
+              onSelect={() => setIsModalVisible(true)}
+              placeholder="Upload image"
             />
           </View>
         </ScrollView>
         <View style={styles.footer}>
           <Button loading={loading} onPress={handleSubmit} style={{ flex: 1 }}>
             <Typo size={22} color={colors.neutral100} fontWeight={"600"}>
-              Update
+              Add Wallet
             </Typo>
           </Button>
         </View>
@@ -156,7 +153,10 @@ export default function ProfileModal() {
               <Button
                 onPress={() => {
                   setIsModalVisible(false);
-                  setUserData(prevState => ({ ...prevState, image: imageUrl }));
+                  setWalletData(prevState => ({
+                    ...prevState,
+                    image: imageUrl,
+                  }));
                 }}
                 style={styles.saveButton}
               >
@@ -192,16 +192,16 @@ const styles = StyleSheet.create({
   avatar: {
     alignSelf: "center",
     backgroundColor: colors.neutral300,
-    height: verticalScale(135),
-    width: verticalScale(135),
-    borderRadius: 200,
+    height: verticalScale(105),
+    width: verticalScale(105),
+    borderRadius: 20,
     borderWidth: 1,
     borderColor: colors.neutral500,
   },
   editIcon: {
     position: "absolute",
-    bottom: spacingY._7,
-    right: spacingY._7,
+    bottom: spacingY._5,
+    right: spacingY._5,
     borderRadius: 100,
     backgroundColor: colors.neutral100,
     shadowColor: colors.black,

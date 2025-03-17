@@ -1,5 +1,5 @@
 import { ScreenWrapper, Typo } from "@/components";
-import { Header } from "@/components/profile";
+import { Header } from "@/components";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
 import { Entypo, AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
