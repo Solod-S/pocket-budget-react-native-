@@ -122,8 +122,8 @@ export interface CustomButtonProps extends TouchableOpacityProps {
 
 export type ImageUploadProps = {
   url?: String | null;
-  onSelect: () => void;
-  onClear: () => void;
+  onSelect: (url: string | null) => void;
+  onClear: (url: string | null) => void;
   containerStyle?: ViewStyle;
   imageStyle?: ViewStyle;
   placeholder?: string;

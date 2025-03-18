@@ -1,12 +1,4 @@
-import {
-  Alert,
-  Modal,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import { scale, verticalScale } from "@/utils/styling";
@@ -16,40 +8,35 @@ import {
   ImageLinkHandler,
   Input,
   ModalWrapper,
-  ScreenWrapper,
   Typo,
 } from "@/components";
 import { Header } from "@/components";
 import { Image } from "expo-image";
-import {
-  createOrUpdateWalletData,
-  getProfileImage,
-  updateUser,
-} from "@/services";
+import { createOrUpdateWalletData, deleteWalletData } from "@/services";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { UserDataType, UserType, WalletType } from "@/types";
 import useAuthStore from "@/store/authStore";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 export default function WalletModal() {
   const router = useRouter();
+  const oldWallet: { name: string; id: string; image: string } =
+    useLocalSearchParams();
   const { user, updateUserData } = useAuthStore();
-  const [imageUrl, setImageUrl] = useState(user?.image || "");
-  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [walletData, setWalletData] = useState<WalletType>({
     name: "",
     image: null,
   });
 
-  const handleImageUrlChange = (url: string) => {
-    setImageUrl(url);
+  const handleImageUrlChange = (url: string | null) => {
     setWalletData(prevState => ({ ...prevState, image: url }));
   };
 
   const handleSubmit = async () => {
     let { name, image } = walletData;
-    if (!name.trim() || !image) {
+    if (!name.trim()) {
       Alert.alert("Wallet", "Please fill all the fields");
       return;
     }
@@ -61,9 +48,10 @@ export default function WalletModal() {
         image,
         uid: user?.uid,
       };
+      if (oldWallet?.id) data.id = oldWallet?.id;
       setLoading(true);
       const result = await createOrUpdateWalletData(data);
-      console.log(`result`, result);
+
       if (result.success) {
         router.back();
       } else {
@@ -76,16 +64,58 @@ export default function WalletModal() {
     }
   };
 
-  const handleCancelEdit = () => {
-    setIsModalVisible(false);
-    setImageUrl(user?.image || "");
+  const handleDelete = async () => {
+    console.log("delete", oldWallet?.id);
+    if (!oldWallet?.id) return;
+    try {
+      setLoading(true);
+      const result = await deleteWalletData(oldWallet?.id);
+
+      if (result.success) {
+        router.back();
+      } else {
+        Alert.alert("Wallet", result.msg);
+      }
+    } catch (error) {
+      console.log("Error in handleDelete: ", error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const showDeleAlarm = () => {
+    Alert.alert(
+      "Confirm",
+      "Are you sure you want to do this? \nThis action will remove all the transactions related to this wallet",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("cancel delete"),
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: () => handleDelete(),
+          style: "destructive",
+        },
+      ]
+    );
+  };
+  useEffect(() => {
+    if (oldWallet?.id) {
+      setWalletData({
+        name: oldWallet?.name,
+        image: oldWallet?.image,
+      });
+    }
+    return () => {};
+  }, []);
 
   return (
     <ModalWrapper>
       <View style={styles.container}>
         <Header
-          title="New Wallet"
+          title={oldWallet?.id ? "Update  Wallet" : "New Wallet"}
           leftIcon={<BackButton />}
           style={{ marginBottom: spacingY._10 }}
         />
@@ -104,68 +134,32 @@ export default function WalletModal() {
             <Typo color={colors.neutral200}>Wallet Icon</Typo>
             <ImageLinkHandler
               url={walletData.image}
-              onClear={() => handleImageUrlChange("")}
-              onSelect={() => setIsModalVisible(true)}
+              onClear={handleImageUrlChange}
+              onSelect={handleImageUrlChange}
               placeholder="Upload image"
             />
           </View>
         </ScrollView>
         <View style={styles.footer}>
+          {oldWallet?.id && !loading && (
+            <Button
+              onPress={showDeleAlarm}
+              loading={loading}
+              style={{
+                paddingHorizontal: spacingX._15,
+                backgroundColor: colors.neutral100,
+              }}
+            >
+              <MaterialIcons name="delete" size={24} color="red" />
+            </Button>
+          )}
           <Button loading={loading} onPress={handleSubmit} style={{ flex: 1 }}>
             <Typo size={22} color={colors.neutral100} fontWeight={"600"}>
-              Add Wallet
+              {oldWallet?.id ? "Save Wallet" : "Add Wallet"}
             </Typo>
           </Button>
         </View>
       </View>
-
-      {/* Modal window for editing image URL */}
-      <Modal
-        visible={isModalVisible}
-        transparent
-        animationType="fade"
-        onRequestClose={handleCancelEdit}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Edit Image URL</Text>
-
-            <Input
-              placeholder="Enter image URL"
-              value={imageUrl}
-              onChangeText={handleImageUrlChange}
-            />
-            <TouchableOpacity
-              style={styles.deleteIcon}
-              onPress={() => setImageUrl("")}
-            >
-              <MaterialIcons
-                name="delete"
-                size={verticalScale(22)}
-                color={colors.neutral100}
-              />
-            </TouchableOpacity>
-
-            <View style={styles.modalButtons}>
-              <Button onPress={handleCancelEdit} style={styles.cancelButton}>
-                <Typo color={colors.neutral100}>Cancel</Typo>
-              </Button>
-              <Button
-                onPress={() => {
-                  setIsModalVisible(false);
-                  setWalletData(prevState => ({
-                    ...prevState,
-                    image: imageUrl,
-                  }));
-                }}
-                style={styles.saveButton}
-              >
-                <Typo color={colors.neutral100}>Save</Typo>
-              </Button>
-            </View>
-          </View>
-        </View>
-      </Modal>
     </ModalWrapper>
   );
 }
@@ -212,41 +206,4 @@ const styles = StyleSheet.create({
     padding: spacingY._7,
   },
   inputContainer: { gap: spacingY._10, marginTop: spacingY._15 },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContent: {
-    backgroundColor: colors.neutral800,
-    padding: spacingY._20,
-    borderRadius: scale(10),
-    width: scale(300),
-    alignItems: "center",
-  },
-  modalTitle: {
-    fontSize: scale(16),
-    color: colors.neutral100,
-    marginBottom: spacingY._10,
-  },
-  modalButtons: {
-    flexDirection: "row",
-    gap: scale(10),
-    marginTop: spacingY._15,
-  },
-  cancelButton: {
-    backgroundColor: colors.neutral600,
-    flex: 1,
-  },
-  saveButton: {
-    backgroundColor: colors.primary,
-    flex: 1,
-  },
-  deleteIcon: {
-    position: "absolute",
-    top: verticalScale(10),
-    right: verticalScale(10),
-    zIndex: 1,
-  },
 });

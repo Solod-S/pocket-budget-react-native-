@@ -1,3 +1,4 @@
+export { Header } from "./Header";
 export { ScreenWrapper } from "./ScreenWrapper";
 export { ModalWrapper } from "./ModalWrapper";
 export { Typo } from "./Typo";
@@ -7,5 +8,4 @@ export { BackButton } from "./BackButton";
 export { Input } from "./Input";
 export { CustomKeyboardView } from "./customKeyboardView";
 export { CustomTabs } from "./CustomTabs";
-export { Header } from "./Header";
 export { ImageLinkHandler } from "./ImageLinkHandler";

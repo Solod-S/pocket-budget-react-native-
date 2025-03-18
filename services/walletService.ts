@@ -1,6 +1,12 @@
 import { db } from "@/config/firebase";
 import { ResponseType, UserDataType, WalletType } from "@/types";
-import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 export const createOrUpdateWalletData = async (
   walletData: Partial<WalletType>
@@ -10,6 +16,9 @@ export const createOrUpdateWalletData = async (
       walletData.amount = 0;
       walletData.totalIncome = 0;
       walletData.created = new Date();
+    }
+    if (!("image" in walletData) || !walletData.image) {
+      walletData.image = null;
     }
 
     // Add/update data to Firestore
@@ -21,7 +30,21 @@ export const createOrUpdateWalletData = async (
 
     return { success: true, data: { ...walletData, id: walletRef.id } };
   } catch (error: any) {
-    console.log(`Error in updateUser: `, error);
+    console.log(`Error in createOrUpdateWalletData: `, error);
+    return { success: false, msg: error?.message };
+  }
+};
+
+export const deleteWalletData = async (
+  walletId: string
+): Promise<ResponseType> => {
+  try {
+    const walletRef = doc(db, "wallets", walletId);
+    await deleteDoc(walletRef);
+    // todo delete all transaction related to this wallet
+    return { success: true, msg: "Wallet deleted successfully" };
+  } catch (error: any) {
+    console.log(`Error in deleteWalletData: `, error);
     return { success: false, msg: error?.message };
   }
 };

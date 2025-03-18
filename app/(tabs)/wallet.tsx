@@ -1,4 +1,4 @@
-import { ScreenWrapper, Typo } from "@/components";
+import { Loading, ScreenWrapper, Typo, WalletListItem } from "@/components";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
 import {
@@ -8,15 +8,33 @@ import {
   View,
   Text,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useRouter } from "expo-router";
+import { useFetchWallets } from "@/hooks";
+import { WalletType } from "@/types";
+import { orderBy, where } from "firebase/firestore";
+import useAuthStore from "@/store/authStore";
 
 export default function Wallet() {
+  const { user } = useAuthStore();
+  const {
+    data: wallets,
+    loading,
+    error,
+  } = useFetchWallets<WalletType>("wallets", [
+    where("uid", "==", user?.uid),
+    orderBy("created", "desc"),
+  ]);
+
   const router = useRouter();
-  const getTotalBalance = () => {
-    return 4242;
-  };
+  const getTotalBalance = () =>
+    wallets.reduce((total, item) => {
+      total = total + (item.amount || 0);
+      return total;
+    }, 0);
+
   return (
     <ScreenWrapper style={{ backgroundColor: "black" }}>
       <View style={styles.container}>
@@ -47,6 +65,16 @@ export default function Wallet() {
               />
             </TouchableOpacity>
           </View>
+          {loading && <Loading />}
+          <FlatList
+            data={wallets}
+            contentContainerStyle={styles.listStyle}
+            renderItem={({ item, index }) => {
+              return (
+                <WalletListItem router={router} item={item} index={index} />
+              );
+            }}
+          />
         </View>
         {/* Wallets list */}
       </View>

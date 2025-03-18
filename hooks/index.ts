@@ -1,0 +1,1 @@
+export { useFetchWallets } from "./useFetchWallets";
