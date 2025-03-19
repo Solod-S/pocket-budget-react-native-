@@ -14,10 +14,12 @@ import {
   TouchableOpacityProps,
   ViewStyle,
 } from "react-native";
+import { Edge } from "react-native-safe-area-context";
 
 export type ScreenWrapperProps = {
   style?: ViewStyle;
   children: React.ReactNode;
+  edges?: Edge[];
 };
 export type ModalWrapperProps = {
   style?: ViewStyle;
