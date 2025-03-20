@@ -1,4 +1,4 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
 import React from "react";
 import TabBarButton from "./TabBarButton";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
@@ -64,8 +64,8 @@ const TabBar = ({ state, descriptors, navigation }: any) => {
 const styles = StyleSheet.create({
   tabbar: {
     position: "absolute",
-    bottom: 25,
-    // bottom: 0,
+    // bottom: 25,
+    bottom: Platform.OS == "ios" ? 25 : 6,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

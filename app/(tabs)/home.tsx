@@ -52,7 +52,7 @@ export default function Home() {
           <FontAwesome
             name="plus"
             size={verticalScale(34)}
-            color={colors.black}
+            color={colors.neutral300}
           />
         </Button>
       </View>

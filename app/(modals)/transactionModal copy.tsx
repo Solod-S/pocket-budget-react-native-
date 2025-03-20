@@ -28,16 +28,17 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { expenseCategories, transactionTypes } from "@/constants/data";
 import { useFetchWallets } from "@/hooks";
 import { orderBy, where } from "firebase/firestore";
-import CalendarPicker from "react-native-calendar-picker";
-import { format } from "date-fns";
+// import DateTimePicker, {
+//   DateTimePickerEvent,
+// } from "@react-native-community/datetimepicker";
 
 export default function TransactionModal() {
   const { user } = useAuthStore();
   const router = useRouter();
   const oldTransaction: { name: string; id: string; image: string } =
     useLocalSearchParams();
-  const [showDatePicker, setShowDatePicker] = useState(false);
 
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [loading, setLoading] = useState(false);
   const [transactionData, setTransactionData] = useState<TransactionType>({
     walletId: "",
@@ -128,6 +129,14 @@ export default function TransactionModal() {
     );
   };
 
+  // const onDateChange = (event: DateTimePickerEvent, selectedDate: Date) => {
+  //   const currentDate = selectedDate || transactionData.date;
+  //   setTransactionData(prevState => ({
+  //     ...prevState,
+  //     date: currentDate,
+  //   }));
+  // };
+
   // useEffect(() => {
   //   if (oldTransaction?.id) {
   // setTransactionData({
@@ -138,27 +147,17 @@ export default function TransactionModal() {
   //   return () => {};
   // }, []);
 
-  const onDateChange = (date: Date) => {
-    setTransactionData({ ...transactionData, date: date });
-    setShowDatePicker(false);
-  };
-
   return (
     <ModalWrapper>
       <View style={styles.container}>
         <Header
           title={oldTransaction?.id ? "Update Transaction" : "New Transaction"}
           leftIcon={<BackButton />}
-          style={{
-            marginBottom: spacingY._10,
-            paddingHorizontal: spacingX._20,
-          }}
+          style={{ marginBottom: spacingY._10 }}
         />
         <ScrollView style={styles.form}>
           {/*transaction type */}
-          <View
-            style={[styles.inputContainer, { paddingHorizontal: spacingX._20 }]}
-          >
+          <View style={styles.inputContainer}>
             <Typo color={colors.neutral200}>Type</Typo>
             {/* dropDown here */}
             <Dropdown
@@ -189,9 +188,7 @@ export default function TransactionModal() {
             />
           </View>
           {/* wallets */}
-          <View
-            style={[styles.inputContainer, { paddingHorizontal: spacingX._20 }]}
-          >
+          <View style={styles.inputContainer}>
             <Typo color={colors.neutral200}>Wallet</Typo>
             {/* dropDown here */}
             <Dropdown
@@ -225,12 +222,7 @@ export default function TransactionModal() {
           </View>
           {/* expense categories */}
           {transactionData.type === "expense" && (
-            <View
-              style={[
-                styles.inputContainer,
-                { paddingHorizontal: spacingX._20 },
-              ]}
-            >
+            <View style={styles.inputContainer}>
               <Typo color={colors.neutral200}>expense categories</Typo>
               {/* dropDown here */}
               <Dropdown
@@ -260,46 +252,31 @@ export default function TransactionModal() {
               />
             </View>
           )}
-
           {/* date picker */}
           <View style={styles.inputContainer}>
-            <View style={{ paddingHorizontal: spacingX._20 }}>
-              <Typo color={colors.neutral200}>Date</Typo>
-            </View>
+            <Typo color={colors.neutral200}>Wallet Icon</Typo>
             {!showDatePicker ? (
-              <View style={{ paddingHorizontal: spacingX._20 }}>
-                <TouchableOpacity
-                  style={styles.dateInput}
-                  onPress={() => setShowDatePicker(true)}
-                >
-                  <Typo size={14}>
-                    {format(transactionData.date as Date, "dd-MM-yyyy")}
-                  </Typo>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity
+                style={styles.dateInput}
+                onPress={() => setShowDatePicker(true)}
+              >
+                <Typo size={14}>{transactionData.date.toLocaleString()}</Typo>
+              </TouchableOpacity>
             ) : (
-              <View>
-                <CalendarPicker
-                  selectedStartDate={transactionData.date as Date}
-                  onDateChange={onDateChange}
-                  todayBackgroundColor="transparent"
-                  selectedDayColor={colors.primary}
-                  selectedDayTextColor="#fff"
-                  textStyle={styles.textStyle}
-                  monthTitleStyle={styles.monthTitleStyle}
-                  nextTitle=""
-                  previousTitle=""
-                  scrollable={true}
-                />
+              <View style={Platform.OS == "ios" && styles.iosDatePicker}>
+                {/* <DateTimePicker
+                  value={transactionData.date as Date}
+                  textColor={colors.white}
+                  mode="date"
+                  display="spinner"
+                  onChange={onDateChange}
+                /> */}
               </View>
             )}
           </View>
-
           {/* image picker */}
-          <View
-            style={[styles.inputContainer, { paddingHorizontal: spacingX._20 }]}
-          >
-            <Typo color={colors.neutral200}>Wallet Icon</Typo>
+          <View style={styles.inputContainer}>
+            <Typo color={colors.neutral200}>Date</Typo>
             <ImageLinkHandler
               url={transactionData.image}
               onClear={handleImageUrlChange}
@@ -335,7 +312,7 @@ export default function TransactionModal() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // paddingHorizontal: spacingX._20,
+    paddingHorizontal: spacingX._20,
   },
 
   form: {
@@ -441,18 +418,4 @@ const styles = StyleSheet.create({
     marginHorizontal: spacingX._7,
   },
   dropDownIcon: { height: verticalScale(30), tintColor: colors.neutral300 },
-  header: {
-    fontSize: verticalScale(18),
-    fontWeight: "bold",
-    marginBottom: spacingY._5,
-  },
-  textStyle: {
-    fontSize: verticalScale(14),
-    color: colors.neutral400,
-  },
-  monthTitleStyle: {
-    fontSize: verticalScale(16),
-    fontWeight: "bold",
-    color: colors.neutral400,
-  },
 });

@@ -115,7 +115,7 @@ export default function WalletModal() {
     <ModalWrapper>
       <View style={styles.container}>
         <Header
-          title={oldWallet?.id ? "Update  Wallet" : "New Wallet"}
+          title={oldWallet?.id ? "Update Wallet" : "New Wallet"}
           leftIcon={<BackButton />}
           style={{ marginBottom: spacingY._10 }}
         />
@@ -182,28 +182,5 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
   },
   form: { gap: spacingY._30, marginTop: spacingY._15 },
-  avatarContainer: { position: "relative", alignSelf: "center" },
-  avatar: {
-    alignSelf: "center",
-    backgroundColor: colors.neutral300,
-    height: verticalScale(105),
-    width: verticalScale(105),
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: colors.neutral500,
-  },
-  editIcon: {
-    position: "absolute",
-    bottom: spacingY._5,
-    right: spacingY._5,
-    borderRadius: 100,
-    backgroundColor: colors.neutral100,
-    shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    elevation: 4,
-    padding: spacingY._7,
-  },
   inputContainer: { gap: spacingY._10, marginTop: spacingY._15 },
 });
