@@ -17,7 +17,8 @@ export const ModalWrapper = ({
       // edges={["bottom"]}
       style={[styles.container, { backgroundColor: bg }, style && style]}
     >
-      <StatusBar style="light" />
+      <StatusBar style="light" backgroundColor={colors.neutral900} />
+
       {children}
     </SafeAreaView>
   );

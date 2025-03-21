@@ -3,7 +3,7 @@ import { Header } from "@/components";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
 import { Entypo, AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Alert } from "react-native";
 import { Image } from "expo-image";
 import { getProfileImage } from "@/services";
 import { accountOptionType } from "@/types";

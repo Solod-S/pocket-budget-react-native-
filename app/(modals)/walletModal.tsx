@@ -1,7 +1,7 @@
 import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { colors, spacingX, spacingY } from "@/constants/theme";
-import { scale, verticalScale } from "@/utils/styling";
+import { scale } from "@/utils/styling";
 import {
   BackButton,
   Button,
@@ -11,10 +11,9 @@ import {
   Typo,
 } from "@/components";
 import { Header } from "@/components";
-import { Image } from "expo-image";
 import { createOrUpdateWalletData, deleteWalletData } from "@/services";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { UserDataType, UserType, WalletType } from "@/types";
+import { WalletType } from "@/types";
 import useAuthStore from "@/store/authStore";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
@@ -121,7 +120,9 @@ export default function WalletModal() {
         />
         <ScrollView style={styles.form}>
           <View style={styles.inputContainer}>
-            <Typo color={colors.neutral200}>Wallet Name</Typo>
+            <Typo color={colors.neutral200} size={16}>
+              Wallet Name
+            </Typo>
             <Input
               placeholder="Salary"
               value={walletData.name}
@@ -131,7 +132,14 @@ export default function WalletModal() {
             />
           </View>
           <View style={styles.inputContainer}>
-            <Typo color={colors.neutral200}>Wallet Icon</Typo>
+            <View style={styles.flexRow}>
+              <Typo color={colors.neutral200} size={16}>
+                Icon url
+              </Typo>
+              <Typo color={colors.neutral500} size={14}>
+                (optional)
+              </Typo>
+            </View>
             <ImageLinkHandler
               url={walletData.image}
               onClear={handleImageUrlChange}
@@ -183,4 +191,9 @@ const styles = StyleSheet.create({
   },
   form: { gap: spacingY._30, marginTop: spacingY._15 },
   inputContainer: { gap: spacingY._10, marginTop: spacingY._15 },
+  flexRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacingX._5,
+  },
 });

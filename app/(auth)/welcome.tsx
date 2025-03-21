@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Button, ScreenWrapper, Typo } from "@/components";
 import { verticalScale } from "@/utils/styling";

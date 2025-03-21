@@ -20,7 +20,6 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
   useEffect(() => {
     if (typeof isAuthenticated === "undefined") return;
-
     const inApp = segments[0] === "(tabs)";
     const inAuth = segments[0] === "(auth)";
 

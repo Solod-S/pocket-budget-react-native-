@@ -1,18 +1,10 @@
-import { View, Text, StyleSheet, Image } from "react-native";
-import React, { useEffect } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { colors } from "@/constants/theme";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import { View, Text, StyleSheet } from "react-native";
+import React from "react";
 import LottieView from "lottie-react-native";
-import { useRouter } from "expo-router";
+
 import { ScreenWrapper } from "@/components";
 
 export default function Index() {
-  const router = useRouter();
-
   return (
     <ScreenWrapper>
       <View style={styles.container}>
@@ -34,5 +26,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  logo: { width: wp(65), height: wp(65) },
+  logo: { width: "60%", height: "60%" },
 });

@@ -1,8 +1,7 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { BackButtonProps } from "@/types";
 import { useRouter } from "expo-router";
-import { Typo } from "./Typo";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { colors, radius } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";

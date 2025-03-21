@@ -44,6 +44,7 @@ export default function Home() {
             title="Recent Transaction"
           />
         </ScrollView>
+        <View style={{ height: verticalScale(20) }}></View>
         <Button
           // style={{ position: "absolute" }}
           style={styles.floatingButton}
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
     width: verticalScale(50),
     borderRadius: 100,
     position: "absolute",
-    bottom: verticalScale(80),
+    bottom: verticalScale(90),
     right: verticalScale(30),
   },
   scrollViewStyle: {

@@ -1,9 +1,7 @@
 import {
   Alert,
-  Platform,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -63,8 +61,34 @@ export default function TransactionModal() {
   };
 
   const handleSubmit = async () => {
-    // let { name, image } = transactionData;
-    // if (!name.trim()) {
+    let { type, amount, description, category, date, walletId, image } =
+      transactionData;
+    const missingFields = [];
+
+    if (type === "expense" && !category) missingFields.push("Category");
+    if (!amount) missingFields.push("Amount");
+    if (!date) missingFields.push("Date");
+    if (!walletId) missingFields.push("Wallet");
+
+    if (missingFields.length > 0) {
+      Alert.alert(
+        "Transaction",
+        `Please fill in the following fields: ${missingFields.join(", ")}`
+      );
+      return;
+    }
+    let data: TransactionType = {
+      type,
+      amount,
+      description,
+      category,
+      date,
+      walletId,
+      image,
+      uid: user?.uid,
+    };
+    console.log("Transaction", data);
+    // if ((type === "expense" && !category) || !amount || !date || !walletId) {
     //   Alert.alert("Transaction", "Please fill all the fields");
     //   return;
     // }
@@ -139,7 +163,10 @@ export default function TransactionModal() {
   // }, []);
 
   const onDateChange = (date: Date) => {
-    setTransactionData({ ...transactionData, date: date });
+    setTransactionData(prevState => ({
+      ...prevState,
+      date: date,
+    }));
     setShowDatePicker(false);
   };
 
@@ -159,7 +186,9 @@ export default function TransactionModal() {
           <View
             style={[styles.inputContainer, { paddingHorizontal: spacingX._20 }]}
           >
-            <Typo color={colors.neutral200}>Type</Typo>
+            <Typo color={colors.neutral200} size={16}>
+              Type
+            </Typo>
             {/* dropDown here */}
             <Dropdown
               activeColor={colors.neutral700}
@@ -188,11 +217,14 @@ export default function TransactionModal() {
               }}
             />
           </View>
+
           {/* wallets */}
           <View
             style={[styles.inputContainer, { paddingHorizontal: spacingX._20 }]}
           >
-            <Typo color={colors.neutral200}>Wallet</Typo>
+            <Typo color={colors.neutral200} size={16}>
+              Wallet
+            </Typo>
             {/* dropDown here */}
             <Dropdown
               activeColor={colors.neutral700}
@@ -223,6 +255,7 @@ export default function TransactionModal() {
               }}
             />
           </View>
+
           {/* expense categories */}
           {transactionData.type === "expense" && (
             <View
@@ -231,7 +264,9 @@ export default function TransactionModal() {
                 { paddingHorizontal: spacingX._20 },
               ]}
             >
-              <Typo color={colors.neutral200}>expense categories</Typo>
+              <Typo color={colors.neutral200} size={16}>
+                Expense categories
+              </Typo>
               {/* dropDown here */}
               <Dropdown
                 activeColor={colors.neutral700}
@@ -264,7 +299,9 @@ export default function TransactionModal() {
           {/* date picker */}
           <View style={styles.inputContainer}>
             <View style={{ paddingHorizontal: spacingX._20 }}>
-              <Typo color={colors.neutral200}>Date</Typo>
+              <Typo color={colors.neutral200} size={16}>
+                Date
+              </Typo>
             </View>
             {!showDatePicker ? (
               <View style={{ paddingHorizontal: spacingX._20 }}>
@@ -285,8 +322,8 @@ export default function TransactionModal() {
                   todayBackgroundColor="transparent"
                   selectedDayColor={colors.primary}
                   selectedDayTextColor="#fff"
-                  textStyle={styles.textStyle}
-                  monthTitleStyle={styles.monthTitleStyle}
+                  textStyle={styles.calendarTextStyle}
+                  monthTitleStyle={styles.calendarMonthTitleStyle}
                   nextTitle=""
                   previousTitle=""
                   scrollable={true}
@@ -295,11 +332,67 @@ export default function TransactionModal() {
             )}
           </View>
 
-          {/* image picker */}
+          {/* amount */}
           <View
             style={[styles.inputContainer, { paddingHorizontal: spacingX._20 }]}
           >
-            <Typo color={colors.neutral200}>Wallet Icon</Typo>
+            <Typo color={colors.neutral200} size={16}>
+              Amount
+            </Typo>
+            <Input
+              // placeholder="Amount"
+              value={transactionData.amount.toString()}
+              keyboardType="numeric"
+              onChangeText={value =>
+                setTransactionData(prevState => ({
+                  ...prevState,
+                  amount: Number(value.replace(/[^0-9]/g, "")),
+                }))
+              }
+            />
+          </View>
+
+          {/* description */}
+          <View
+            style={[styles.inputContainer, { paddingHorizontal: spacingX._20 }]}
+          >
+            <View style={styles.flexRow}>
+              <Typo color={colors.neutral200} size={16}>
+                Description
+              </Typo>
+              <Typo color={colors.neutral500} size={14}>
+                (optional)
+              </Typo>
+            </View>
+            <Input
+              placeholder="Description"
+              containerStyle={{
+                flexDirection: "row",
+                height: verticalScale(100),
+                alignItems: "flex-start",
+                paddingVertical: 15,
+              }}
+              multiline={true}
+              value={transactionData.description}
+              onChangeText={value =>
+                setTransactionData(prevState => ({
+                  ...prevState,
+                  description: value,
+                }))
+              }
+            />
+          </View>
+          <View
+            style={[styles.inputContainer, { paddingHorizontal: spacingX._20 }]}
+          >
+            <View style={styles.flexRow}>
+              <Typo color={colors.neutral200} size={16}>
+                Icon url
+              </Typo>
+              <Typo color={colors.neutral500} size={14}>
+                (optional)
+              </Typo>
+            </View>
             <ImageLinkHandler
               url={transactionData.image}
               onClear={handleImageUrlChange}
@@ -323,7 +416,7 @@ export default function TransactionModal() {
           )}
           <Button loading={loading} onPress={handleSubmit} style={{ flex: 1 }}>
             <Typo size={22} color={colors.neutral100} fontWeight={"600"}>
-              {oldTransaction?.id ? "Save Wallet" : "Add Wallet"}
+              {oldTransaction?.id ? "Update" : "Submit"}
             </Typo>
           </Button>
         </View>
@@ -446,11 +539,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: spacingY._5,
   },
-  textStyle: {
+  calendarTextStyle: {
     fontSize: verticalScale(14),
     color: colors.neutral400,
   },
-  monthTitleStyle: {
+  calendarMonthTitleStyle: {
     fontSize: verticalScale(16),
     fontWeight: "bold",
     color: colors.neutral400,

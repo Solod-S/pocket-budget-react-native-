@@ -14,7 +14,7 @@ export const ScreenWrapper = ({
       edges={["top", ...edges]}
       style={[{ flex: 1, backgroundColor: colors.neutral900 }, style]}
     >
-      <StatusBar style="light" />
+      <StatusBar style="light" backgroundColor={colors.neutral900} />
       {children}
     </SafeAreaView>
   );

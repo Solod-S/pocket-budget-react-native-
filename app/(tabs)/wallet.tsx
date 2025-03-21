@@ -1,15 +1,7 @@
 import { Loading, ScreenWrapper, Typo, WalletListItem } from "@/components";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
-import {
-  Image,
-  StyleSheet,
-  Platform,
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
+import { StyleSheet, View, TouchableOpacity, FlatList } from "react-native";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useRouter } from "expo-router";
 import { useFetchWallets } from "@/hooks";

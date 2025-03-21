@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { View, TouchableOpacity, Alert } from "react-native";
 import React, { useRef, useState } from "react";
 import { StyleSheet } from "react-native";
 import {

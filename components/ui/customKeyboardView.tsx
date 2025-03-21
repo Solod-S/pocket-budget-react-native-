@@ -3,7 +3,11 @@ import React from "react";
 
 const ios = Platform.OS == "ios";
 
-export function CustomKeyboardView({ children }) {
+export function CustomKeyboardView({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
