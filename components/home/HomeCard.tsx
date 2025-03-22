@@ -4,8 +4,34 @@ import { colors, spacingX, spacingY } from "@/constants/theme";
 import { scale, verticalScale } from "@/utils/styling";
 import { ImageBackground } from "expo-image";
 import { Entypo, AntDesign } from "@expo/vector-icons";
+import useAuthStore from "@/store/authStore";
+import { useFetchData } from "@/hooks";
+import { WalletType } from "@/types";
+import { orderBy, where } from "firebase/firestore";
 
 export const HomeCard = () => {
+  const { user } = useAuthStore();
+  const {
+    data: wallets,
+    loading: walletsLoading,
+    error,
+  } = useFetchData<WalletType>("wallets", [
+    where("uid", "==", user?.uid),
+    orderBy("created", "desc"),
+  ]);
+
+  const getTotals = () => {
+    return wallets.reduce(
+      (totals: any, item: WalletType) => {
+        totals.balance += Number(item.amount);
+        totals.income += Number(item.totalIncome);
+        totals.expense += Number(item.totalExpenses);
+        return totals;
+      },
+      { balance: 0, income: 0, expense: 0 }
+    );
+  };
+
   return (
     <ImageBackground
       // resizeMode="stretch"
@@ -27,7 +53,7 @@ export const HomeCard = () => {
             />
           </View>
           <Typo color={colors.black} size={30} fontWeight={"bold"}>
-            $234.22
+            $ {walletsLoading ? "---" : getTotals()?.balance?.toFixed(2)}
           </Typo>
         </View>
         {/* Total expense and income */}
@@ -44,7 +70,7 @@ export const HomeCard = () => {
             </View>
             <View style={{ alignSelf: "center" }}>
               <Typo size={17} color={colors.green} fontWeight={"600"}>
-                $465
+                $ {walletsLoading ? "---" : getTotals()?.income?.toFixed(2)}
               </Typo>
             </View>
           </View>
@@ -60,7 +86,7 @@ export const HomeCard = () => {
             </View>
             <View style={{ alignSelf: "center" }}>
               <Typo size={17} color={colors.rose} fontWeight={"600"}>
-                $241
+                $ {walletsLoading ? "---" : getTotals()?.expense?.toFixed(2)}
               </Typo>
             </View>
           </View>

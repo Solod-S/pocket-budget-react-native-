@@ -1,15 +1,30 @@
 import { Button, ScreenWrapper, Typo } from "@/components";
 import { HomeCard, TransactionList } from "@/components/home";
 import { colors, spacingX, spacingY } from "@/constants/theme";
+import { useFetchData } from "@/hooks";
 import useAuthStore from "@/store/authStore";
+import { TransactionType } from "@/types";
 import { verticalScale } from "@/utils/styling";
 import { FontAwesome } from "@expo/vector-icons/";
 import { useRouter } from "expo-router";
+import { limit, orderBy, where } from "firebase/firestore";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
 export default function Home() {
-  const { user } = useAuthStore();
   const router = useRouter();
+  const { user } = useAuthStore();
+
+  const constains = [
+    where("uid", "==", user?.uid),
+    orderBy("date", "asc"),
+    limit(30),
+  ];
+  const {
+    data: recentTransactions,
+    loading: transactionLoading,
+    error,
+  } = useFetchData<TransactionType>("transactions", constains);
+
   return (
     <ScreenWrapper edges={["bottom"]}>
       <View style={styles.container}>
@@ -38,10 +53,10 @@ export default function Home() {
             <HomeCard />
           </View>
           <TransactionList
-            data={[1, 2, 3, 4, 5, 6]}
-            loading={false}
+            data={recentTransactions}
             emptyListMessage="No Transaction added yet!"
             title="Recent Transaction"
+            loading={transactionLoading}
           />
         </ScrollView>
         <View style={{ height: verticalScale(20) }}></View>

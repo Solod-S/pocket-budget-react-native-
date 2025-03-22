@@ -15,6 +15,7 @@ export const createOrUpdateWalletData = async (
     if (!walletData?.id) {
       walletData.amount = 0;
       walletData.totalIncome = 0;
+      walletData.totalExpenses = 0;
       walletData.created = new Date();
     }
     if (!("image" in walletData) || !walletData.image) {

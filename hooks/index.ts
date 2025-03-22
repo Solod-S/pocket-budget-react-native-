@@ -1,1 +1,1 @@
-export { useFetchWallets } from "./useFetchWallets";
+export { useFetchData } from "./useFetchData";

@@ -4,7 +4,7 @@ import { verticalScale } from "@/utils/styling";
 import { StyleSheet, View, TouchableOpacity, FlatList } from "react-native";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useRouter } from "expo-router";
-import { useFetchWallets } from "@/hooks";
+import { useFetchData } from "@/hooks";
 import { WalletType } from "@/types";
 import { orderBy, where } from "firebase/firestore";
 import useAuthStore from "@/store/authStore";
@@ -15,7 +15,7 @@ export default function Wallet() {
     data: wallets,
     loading,
     error,
-  } = useFetchWallets<WalletType>("wallets", [
+  } = useFetchData<WalletType>("wallets", [
     where("uid", "==", user?.uid),
     orderBy("created", "desc"),
   ]);

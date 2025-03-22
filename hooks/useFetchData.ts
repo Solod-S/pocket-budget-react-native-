@@ -8,7 +8,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/config/firebase";
 
-export const useFetchWallets = <T>(
+export const useFetchData = <T>(
   collectionName: string,
   constaints: QueryConstraint[] = []
 ) => {

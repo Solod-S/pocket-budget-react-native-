@@ -18,13 +18,13 @@ import {
 } from "@/components";
 import { Header } from "@/components";
 import { Dropdown } from "react-native-element-dropdown";
-import { deleteWalletData } from "@/services";
+import { createOrUpdateTransactionData, deleteWalletData } from "@/services";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { TransactionType, UserDataType, UserType, WalletType } from "@/types";
 import useAuthStore from "@/store/authStore";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { expenseCategories, transactionTypes } from "@/constants/data";
-import { useFetchWallets } from "@/hooks";
+import { useFetchData } from "@/hooks";
 import { orderBy, where } from "firebase/firestore";
 import CalendarPicker from "react-native-calendar-picker";
 import { format } from "date-fns";
@@ -51,7 +51,7 @@ export default function TransactionModal() {
     data: wallets,
     loading: walletLoading,
     error: walletError,
-  } = useFetchWallets<WalletType>("wallets", [
+  } = useFetchData<WalletType>("wallets", [
     where("uid", "==", user?.uid),
     orderBy("created", "desc"),
   ]);
@@ -61,57 +61,45 @@ export default function TransactionModal() {
   };
 
   const handleSubmit = async () => {
-    let { type, amount, description, category, date, walletId, image } =
-      transactionData;
-    const missingFields = [];
+    try {
+      let { type, amount, description, category, date, walletId, image } =
+        transactionData;
+      const missingFields = [];
 
-    if (type === "expense" && !category) missingFields.push("Category");
-    if (!amount) missingFields.push("Amount");
-    if (!date) missingFields.push("Date");
-    if (!walletId) missingFields.push("Wallet");
+      if (type === "expense" && !category) missingFields.push("Category");
+      if (!amount) missingFields.push("Amount");
+      if (!date) missingFields.push("Date");
+      if (!walletId) missingFields.push("Wallet");
 
-    if (missingFields.length > 0) {
-      Alert.alert(
-        "Transaction",
-        `Please fill in the following fields: ${missingFields.join(", ")}`
-      );
-      return;
+      if (missingFields.length > 0) {
+        Alert.alert(
+          "Transaction",
+          `Please fill in the following fields: ${missingFields.join(", ")}`
+        );
+        return;
+      }
+      let data: TransactionType = {
+        type,
+        amount,
+        description,
+        category,
+        date,
+        walletId,
+        image,
+        uid: user?.uid,
+      };
+      setLoading(true);
+      const result = await createOrUpdateTransactionData(data);
+      if (result.success) {
+        router.back();
+      } else {
+        Alert.alert("Transaction", result.msg);
+      }
+    } catch (error) {
+      console.log("Error in handleSubmit: ", error);
+    } finally {
+      setLoading(false);
     }
-    let data: TransactionType = {
-      type,
-      amount,
-      description,
-      category,
-      date,
-      walletId,
-      image,
-      uid: user?.uid,
-    };
-    console.log("Transaction", data);
-    // if ((type === "expense" && !category) || !amount || !date || !walletId) {
-    //   Alert.alert("Transaction", "Please fill all the fields");
-    //   return;
-    // }
-    // try {
-    //   // todo include wallet id to update
-    //   const data: WalletType = {
-    //     name,
-    //     image,
-    //     uid: user?.uid,
-    //   };
-    //   if (oldTransaction?.id) data.id = oldTransaction?.id;
-    //   setLoading(true);
-    //   const result = await createOrUpdateWalletData(data);
-    //   if (result.success) {
-    //     router.back();
-    //   } else {
-    //     Alert.alert("Transaction", result.msg);
-    //   }
-    // } catch (error) {
-    //   console.log("Error in handleSubmit: ", error);
-    // } finally {
-    //   setLoading(false);
-    // }
   };
 
   const handleDelete = async () => {
@@ -227,14 +215,39 @@ export default function TransactionModal() {
             </Typo>
             {/* dropDown here */}
             <Dropdown
+              disable={wallets?.length <= 0}
               activeColor={colors.neutral700}
-              style={styles.dropDownContainer}
+              style={[
+                styles.dropDownContainer,
+                {
+                  borderColor:
+                    wallets?.length <= 0
+                      ? colors.neutral700
+                      : colors.neutral300,
+                },
+              ]}
               itemTextStyle={styles.dropDownItemText}
               containerStyle={styles.dropDownListContainer}
               itemContainerStyle={styles.dropDownItemContainer}
-              placeholderStyle={styles.dropDownPlaceholder}
+              placeholderStyle={[
+                styles.dropDownPlaceholder,
+                {
+                  color:
+                    wallets?.length <= 0
+                      ? colors.neutral700
+                      : colors.neutral300,
+                },
+              ]}
               selectedTextStyle={styles.dropDownSelectText}
-              iconStyle={styles.dropDownIcon}
+              iconStyle={[
+                styles.dropDownIcon,
+                {
+                  tintColor:
+                    wallets?.length <= 0
+                      ? colors.neutral700
+                      : colors.neutral300,
+                },
+              ]}
               data={wallets.map(item => ({
                 label: `${item?.name} ($${item?.amount})`,
                 value: item?.id,
