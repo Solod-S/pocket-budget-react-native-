@@ -32,8 +32,20 @@ import { format } from "date-fns";
 export default function TransactionModal() {
   const { user } = useAuthStore();
   const router = useRouter();
-  const oldTransaction: { name: string; id: string; image: string } =
-    useLocalSearchParams();
+
+  type paramType = {
+    id: string;
+    type: string;
+    amount: string;
+    category: string;
+    date: string;
+    description: string;
+    image: any;
+    uid: string;
+    walletId: string;
+  };
+
+  const oldTransaction: paramType = useLocalSearchParams();
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -88,6 +100,8 @@ export default function TransactionModal() {
         image,
         uid: user?.uid,
       };
+      if (oldTransaction?.id) data.id = oldTransaction?.id;
+
       setLoading(true);
       const result = await createOrUpdateTransactionData(data);
       if (result.success) {
@@ -140,15 +154,20 @@ export default function TransactionModal() {
     );
   };
 
-  // useEffect(() => {
-  //   if (oldTransaction?.id) {
-  // setTransactionData({
-  //   name: oldTransaction?.name,
-  //   image: oldTransaction?.image,
-  // });
-  //   }
-  //   return () => {};
-  // }, []);
+  useEffect(() => {
+    if (oldTransaction?.id) {
+      setTransactionData({
+        type: oldTransaction?.type,
+        amount: Number(oldTransaction?.amount),
+        description: oldTransaction?.description || "",
+        category: oldTransaction?.category,
+        date: new Date(oldTransaction?.date),
+        walletId: oldTransaction?.walletId,
+        image: oldTransaction?.image || null,
+      });
+    }
+    return () => {};
+  }, []);
 
   const onDateChange = (date: Date) => {
     setTransactionData(prevState => ({

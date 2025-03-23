@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { TransactionListType } from "@/types";
+import { TransactionListType, TransactionType } from "@/types";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { Loading, Typo } from "../ui";
 import { FlashList } from "@shopify/flash-list";
 import { TransactionItem } from "./TransactionItem";
 import { verticalScale } from "@/utils/styling";
+import { useRouter } from "expo-router";
+import { Timestamp } from "firebase/firestore";
 
 export const TransactionList = ({
   data,
@@ -13,7 +15,22 @@ export const TransactionList = ({
   loading,
   emptyListMessage,
 }: TransactionListType) => {
-  const handleClick = () => {
+  const router = useRouter();
+  const handleClick = (item: TransactionType) => {
+    router.push({
+      pathname: "/(modals)/transactionModal",
+      params: {
+        id: item.id,
+        type: item?.type,
+        amount: item?.amount?.toString(),
+        category: item?.category,
+        date: (item.date as Timestamp)?.toDate()?.toISOString(),
+        description: item?.description,
+        image: item?.image,
+        uid: item?.uid,
+        walletId: item?.walletId,
+      },
+    });
     // open details in modal
   };
 

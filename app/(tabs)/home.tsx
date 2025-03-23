@@ -16,7 +16,7 @@ export default function Home() {
 
   const constains = [
     where("uid", "==", user?.uid),
-    orderBy("date", "asc"),
+    orderBy("date", "desc"),
     limit(30),
   ];
   const {
