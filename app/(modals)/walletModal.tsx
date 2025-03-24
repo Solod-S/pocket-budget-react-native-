@@ -57,14 +57,13 @@ export default function WalletModal() {
         Alert.alert("Wallet", result.msg);
       }
     } catch (error) {
-      console.log("Error in handleSubmit: ", error);
+      console.log("Error in submitting wallet: ", error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async () => {
-    console.log("delete", oldWallet?.id);
     if (!oldWallet?.id) return;
     try {
       setLoading(true);
@@ -76,7 +75,7 @@ export default function WalletModal() {
         Alert.alert("Wallet", result.msg);
       }
     } catch (error) {
-      console.log("Error in handleDelete: ", error);
+      console.log("Error in deleting wallet: ", error);
     } finally {
       setLoading(false);
     }

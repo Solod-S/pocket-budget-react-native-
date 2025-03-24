@@ -28,6 +28,7 @@ import { useFetchData } from "@/hooks";
 import { orderBy, where } from "firebase/firestore";
 import CalendarPicker from "react-native-calendar-picker";
 import { format } from "date-fns";
+import { deleteTransactionData } from "@/services/transactionServices";
 
 export default function TransactionModal() {
   const { user } = useAuthStore();
@@ -97,7 +98,7 @@ export default function TransactionModal() {
         category,
         date,
         walletId,
-        image,
+        image: image ? image : null,
         uid: user?.uid,
       };
       if (oldTransaction?.id) data.id = oldTransaction?.id;
@@ -110,48 +111,46 @@ export default function TransactionModal() {
         Alert.alert("Transaction", result.msg);
       }
     } catch (error) {
-      console.log("Error in handleSubmit: ", error);
+      console.log("Error in submitting transaction: ", error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async () => {
-    console.log("delete", oldTransaction?.id);
-    if (!oldTransaction?.id) return;
+    if (!oldTransaction?.id || !oldTransaction?.walletId) return;
     try {
       setLoading(true);
-      const result = await deleteWalletData(oldTransaction?.id);
+      const result = await deleteTransactionData(
+        oldTransaction?.id,
+        oldTransaction?.walletId
+      );
 
       if (result.success) {
         router.back();
       } else {
-        Alert.alert("Wallet", result.msg);
+        Alert.alert("Transaction", result.msg);
       }
     } catch (error) {
-      console.log("Error in handleDelete: ", error);
+      console.log("Error in deleting transaction: ", error);
     } finally {
       setLoading(false);
     }
   };
 
   const showDeleAlarm = () => {
-    Alert.alert(
-      "Confirm",
-      "Are you sure you want to do this? \nThis action will remove all the transactions related to this wallet",
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("cancel delete"),
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          onPress: () => handleDelete(),
-          style: "destructive",
-        },
-      ]
-    );
+    Alert.alert("Confirm", "Are you sure you want to do this transaction?", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("cancel delete"),
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        onPress: () => handleDelete(),
+        style: "destructive",
+      },
+    ]);
   };
 
   useEffect(() => {

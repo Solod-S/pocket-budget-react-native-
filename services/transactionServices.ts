@@ -15,7 +15,6 @@ export const createOrUpdateTransactionData = async (
 ): Promise<ResponseType> => {
   try {
     const { id, type, walletId, amount, image } = transactionData;
-
     if (!amount || amount <= 0 || !walletId || !type) {
       return { success: false, msg: "Invalid transaction data" };
     }
@@ -32,8 +31,7 @@ export const createOrUpdateTransactionData = async (
           oldTransaction,
           Number(amount),
           type,
-          walletId,
-          image
+          walletId
         );
         if (!res.success) return res;
       }
@@ -42,8 +40,8 @@ export const createOrUpdateTransactionData = async (
       const res = await updateWalletForNewTransaction(
         walletId!,
         Number(amount!),
-        type,
-        image
+        type
+        // image
       );
       if (!res.success) return res;
     }
@@ -65,8 +63,8 @@ export const createOrUpdateTransactionData = async (
 const updateWalletForNewTransaction = async (
   walletId: string,
   amount: number,
-  type: string,
-  image: string | null
+  type: string
+  // image: string | null
 ) => {
   try {
     const walletRef = doc(db, "wallets", walletId);
@@ -104,7 +102,7 @@ const updateWalletForNewTransaction = async (
     await updateDoc(walletRef, {
       amount: updatedWalletAmount,
       [updateType]: updatedTotals,
-      image,
+      // image,
     });
     return { success: true };
   } catch (error: any) {
@@ -112,44 +110,44 @@ const updateWalletForNewTransaction = async (
     return { success: false, msg: error?.message };
   }
 };
+
 const revertAndUpdateWallets = async (
   oldTransaction: TransactionType,
   newTransactionAmount: number,
   newTransactionType: string,
-  newWalletId: string,
-  image: null | string
+  newWalletId: string
+  // image: null | string
 ) => {
   try {
     // 1 WORK WITH OLD WALLET
     // get old wallet
-    const originalWalletRef = doc(db, "wallets", oldTransaction?.walletId);
-    const originalWalletSnapshot = await getDoc(originalWalletRef);
+    const originalWalletSnapshot = await getDoc(
+      doc(db, "wallets", oldTransaction.walletId)
+    );
     const originalWallet = originalWalletSnapshot.data() as WalletType;
 
-    // get new wallet
-    const newWalletRef = doc(db, "wallets", newWalletId);
-    const newWalletSnapshot = await getDoc(newWalletRef);
+    let newWalletSnapshot = await getDoc(doc(db, "wallets", newWalletId));
     let newWallet = newWalletSnapshot.data() as WalletType;
 
     const revertType =
-      oldTransaction?.type === "income" ? "totalIncome" : "totalExpenses";
+      oldTransaction.type === "income" ? "totalIncome" : "totalExpenses";
 
     const revertIncomeExpense: number =
       oldTransaction.type === "income"
-        ? -Number(oldTransaction?.amount)
-        : Number(oldTransaction?.amount);
+        ? -Number(oldTransaction.amount)
+        : Number(oldTransaction.amount);
 
     const revertedWalletAmount =
-      Number(originalWallet?.amount) + revertIncomeExpense;
-    //wallet amount, after the transaction is removed
-    const revertIncomeExpenseAmount =
-      Number(originalWallet[revertType]) - Number(oldTransaction?.amount);
+      Number(originalWallet.amount) + revertIncomeExpense;
+
+    const revertIncomeExpenseAmount = Math.max(
+      Number(originalWallet[revertType]) - Number(oldTransaction.amount),
+      0
+    );
 
     if (newTransactionType === "expense") {
-      // if user tries to convert income to expense on the same wallet
-      // or if the user tries to increase the expense amount and don't have enough balance
       if (
-        oldTransaction?.walletId === newWalletId &&
+        oldTransaction.walletId === newWalletId &&
         revertedWalletAmount < newTransactionAmount
       ) {
         return {
@@ -157,68 +155,104 @@ const revertAndUpdateWallets = async (
           msg: "The selected wallets don't have enough balance!",
         };
       }
-
-      // if user tries to add expense from a new wallet but the don't have enough balance
-      if (newWallet.amount! < newTransactionAmount)
+      if ((newWallet.amount ?? 0) < newTransactionAmount) {
         return {
           success: false,
           msg: "The selected wallets don't have enough balance",
         };
+      }
     }
 
     await createOrUpdateWalletData({
       id: oldTransaction.walletId,
       amount: revertedWalletAmount,
       [revertType]: revertIncomeExpenseAmount,
-      image,
+      // image,
     });
 
-    // updateWalletForNewTransaction
-
     // 2 WORK WITH NEW WALLET
-
     // refetch the newallet becouse we may have just update it
 
-    const updatedWalletSnapshot = await getDoc(doc(db, "wallets", newWalletId));
-    newWallet = updatedWalletSnapshot.data() as WalletType;
+    const newUpdateWalletSnapshot = await getDoc(
+      doc(db, "wallets", newWalletId)
+    );
+    const newUpdatedWallet = newUpdateWalletSnapshot.data() as WalletType;
 
     const updateType =
       newTransactionType === "income" ? "totalIncome" : "totalExpenses";
 
-    const updateTransactionAmount: number =
+    const updateTransactionAmount =
       newTransactionType === "income"
         ? Number(newTransactionAmount)
         : -Number(newTransactionAmount);
-    console.log(`updateTransactionAmount`, updateTransactionAmount);
-    const newWalletAmount = Number(newWallet?.amount) + updateTransactionAmount;
 
-    const newIncomeExpenseAmount =
-      Number(newWallet[updateType]) + Number(updateTransactionAmount);
+    const newWalletAmount =
+      Number(newUpdatedWallet.amount ?? 0) + updateTransactionAmount;
+
+    const newIncomeExpenseAmount = Math.max(
+      Number(newUpdatedWallet[updateType]) + Number(newTransactionAmount),
+      0
+    );
 
     await createOrUpdateWalletData({
       id: newWalletId,
       amount: newWalletAmount,
       [updateType]: newIncomeExpenseAmount,
-      image,
+      // image,
     });
 
     return { success: true };
   } catch (error: any) {
-    console.log(`Error in updateWalletForNewTransaction: `, error);
-    return { success: false, msg: error?.message };
+    console.log(`Error in revertAndUpdateWallets: `, error);
+    return { success: false, msg: error.message };
   }
 };
 
 export const deleteTransactionData = async (
+  transactionId: string,
   walletId: string
 ): Promise<ResponseType> => {
   try {
-    const walletRef = doc(db, "wallets", walletId);
-    await deleteDoc(walletRef);
-    // todo delete all transaction related to this wallet
+    const transactionRef = doc(db, "transactions", transactionId);
+    const transactionSnapshot = await getDoc(transactionRef);
+    if (!transactionSnapshot.exists()) {
+      return { success: false, msg: "Transaction not found" };
+    }
+    const transactionData = transactionSnapshot.data() as TransactionType;
+
+    const transactionType = transactionData?.type;
+    const transactionAmount = transactionData?.amount;
+
+    // fetch wallet to update amount, totalIncome or totalExpenses
+    const walletSnapshot = await getDoc(doc(db, "wallets", walletId));
+    const walletData = walletSnapshot.data() as WalletType;
+
+    // check field to be updated based on transaction type
+    const updateType =
+      transactionType === "income" ? "totalIncome" : "totalExpenses";
+
+    const newWalletAmount =
+      walletData?.amount! -
+      (transactionType === "income" ? transactionAmount : -transactionAmount);
+
+    const newIncomeExpenseAmount = walletData[updateType]! - transactionAmount;
+
+    if (transactionType == "income" && newWalletAmount < 0) {
+      return {
+        success: false,
+        msg: `You cannot delete this transaction because it would result in a negative wallet balance.`,
+      };
+    }
+    await createOrUpdateWalletData({
+      id: walletId,
+      amount: newWalletAmount,
+      [updateType]: newIncomeExpenseAmount,
+    });
+
+    await deleteDoc(transactionRef);
     return { success: true, msg: "Wallet deleted successfully" };
   } catch (error: any) {
     console.log(`Error in deleteWalletData: `, error);
-    return { success: false, msg: error?.message };
+    return { success: false, msg: error.message };
   }
 };

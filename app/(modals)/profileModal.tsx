@@ -68,7 +68,7 @@ export default function ProfileModal() {
         Alert.alert("User", result.msg);
       }
     } catch (error) {
-      console.log("Error in handleSubmit: ", error);
+      console.log("Error in submitting user: ", error);
     } finally {
       setLoading(false);
     }
