@@ -1,11 +1,12 @@
 import { Header, Loading, ScreenWrapper, Typo } from "@/components";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { scale, verticalScale } from "@/utils/styling";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import SegmentedControl from "@react-native-segmented-control/segmented-control";
 import { useEffect, useState } from "react";
 import { BarChart } from "react-native-gifted-charts";
 import useAuthStore from "@/store/authStore";
+import { fetchWeeklyChartData } from "@/services";
 
 const barData = [
   {
@@ -73,6 +74,7 @@ const barData = [
 
 export default function Status() {
   const { user } = useAuthStore();
+  const [loading, setLoading] = useState(false);
   const [chartLoading, setChartLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [chart, setChart] = useState(barData);
@@ -96,7 +98,21 @@ export default function Status() {
     }
   }, [activeIndex]);
 
-  const getWeeklyChart = async () => {};
+  const getWeeklyChart = async () => {
+    try {
+      setLoading(true);
+      const res = await fetchWeeklyChartData(user?.uid as string);
+      if (res.success) {
+        setChart(res?.data?.stats);
+      } else {
+        Alert.alert("Error", res.msg);
+      }
+    } catch (error) {
+      console.log(`Error in getWeeklyChart`, error);
+    } finally {
+      setLoading(false);
+    }
+  };
   const getMonthlyChart = async () => {};
   const getYearlyChart = async () => {};
 
@@ -122,7 +138,7 @@ export default function Status() {
                 setActiveIndex(event.nativeEvent.selectedSegmentIndex);
               }}
               tintColor={colors.neutral200}
-              // backgroundColor={colors.neutral800}
+              backgroundColor={colors.neutral800}
               activeFontStyle={styles.segmentFontStyle}
               style={styles.segmentStyle}
               fontStyle={{ ...styles.segmentFontStyle, color: colors.white }}
