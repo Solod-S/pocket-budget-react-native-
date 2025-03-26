@@ -48,7 +48,6 @@ export default function TransactionModal() {
 
   const oldTransaction: paramType = useLocalSearchParams();
   const [showDatePicker, setShowDatePicker] = useState(false);
-
   const [loading, setLoading] = useState(false);
   const [transactionData, setTransactionData] = useState<TransactionType>({
     walletId: "",

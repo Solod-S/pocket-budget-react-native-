@@ -6,78 +6,35 @@ import SegmentedControl from "@react-native-segmented-control/segmented-control"
 import { useEffect, useState } from "react";
 import { BarChart } from "react-native-gifted-charts";
 import useAuthStore from "@/store/authStore";
-import { fetchWeeklyChartData } from "@/services";
+import {
+  fetchMonthlyChartData,
+  fetchWeeklyChartData,
+  fetchYearlyChartData,
+} from "@/services";
+import { TransactionList } from "@/components/home";
 
-const barData = [
-  {
-    value: 40,
-    label: "Mon",
-    spacing: scale(4),
-    labelWidth: scale(30),
-    frontColor: colors.green,
-    // topLabelComponent: () => {
-    //   <Typo size={10} style={{ marginBottom: 4 }} fontWeight={"bold"}>
-    //     50
-    //   </Typo>;
-    // },
-  },
-  { value: 20, frontColor: colors.rose },
-  {
-    value: 50,
-    label: "Tue",
-    spacing: scale(4),
-    labelWidth: scale(30),
-    frontColor: colors.green,
-  },
-  { value: 40, frontColor: colors.rose },
-  {
-    value: 75,
-    label: "Wed",
-    spacing: scale(4),
-    labelWidth: scale(30),
-    frontColor: colors.green,
-  },
-  { value: 25, frontColor: colors.rose },
-  {
-    value: 30,
-    label: "Thu",
-    spacing: scale(4),
-    labelWidth: scale(30),
-    frontColor: colors.green,
-  },
-  { value: 20, frontColor: colors.rose },
-  {
-    value: 60,
-    label: "Fri",
-    spacing: scale(4),
-    labelWidth: scale(30),
-    frontColor: colors.green,
-  },
-  { value: 40, frontColor: colors.rose },
-  {
-    value: 60,
-    label: "Sat",
-    spacing: scale(4),
-    labelWidth: scale(30),
-    frontColor: colors.green,
-  },
-  { value: 30, frontColor: colors.rose },
-  {
-    value: 60,
-    label: "Sun",
-    spacing: scale(4),
-    labelWidth: scale(30),
-    frontColor: colors.green,
-  },
-  { value: 30, frontColor: colors.rose },
-];
+// const chartExmpl = [
+//   {
+//     value: 40,
+//     label: "Mon",
+//     spacing: scale(4),
+//     labelWidth: scale(30),
+//     frontColor: colors.green,
+//     // topLabelComponent: () => {
+//     //   <Typo size={10} style={{ marginBottom: 4 }} fontWeight={"bold"}>
+//     //     50
+//     //   </Typo>;
+//     // },
+//   },
+//   { value: 20, frontColor: colors.rose },
+// ];
 
 export default function Status() {
   const { user } = useAuthStore();
   const [loading, setLoading] = useState(false);
-  const [chartLoading, setChartLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [chart, setChart] = useState(barData);
+  const [chart, setChart] = useState([]);
+  const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
     switch (true) {
@@ -89,7 +46,7 @@ export default function Status() {
         getMonthlyChart();
         break;
 
-      case activeIndex === 3:
+      case activeIndex === 2:
         getYearlyChart();
         break;
 
@@ -104,6 +61,7 @@ export default function Status() {
       const res = await fetchWeeklyChartData(user?.uid as string);
       if (res.success) {
         setChart(res?.data?.stats);
+        setTransactions(res?.data?.transactions);
       } else {
         Alert.alert("Error", res.msg);
       }
@@ -113,12 +71,42 @@ export default function Status() {
       setLoading(false);
     }
   };
-  const getMonthlyChart = async () => {};
-  const getYearlyChart = async () => {};
+  const getMonthlyChart = async () => {
+    try {
+      setLoading(true);
+      const res = await fetchMonthlyChartData(user?.uid as string);
+      if (res.success) {
+        setChart(res?.data?.stats);
+        setTransactions(res?.data?.transactions);
+      } else {
+        Alert.alert("Error", res.msg);
+      }
+    } catch (error) {
+      console.log(`Error in getMonthlyChart`, error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const getYearlyChart = async () => {
+    try {
+      setLoading(true);
+      const res = await fetchYearlyChartData(user?.uid as string);
+      if (res.success) {
+        setChart(res?.data?.stats);
+        setTransactions(res?.data?.transactions);
+      } else {
+        Alert.alert("Error", res.msg);
+      }
+    } catch (error) {
+      console.log(`Error in getMonthlyChart`, error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <ScreenWrapper>
-      <View>
+    <ScreenWrapper edges={["bottom"]}>
+      <View style={{ paddingBottom: verticalScale(180) }}>
         <View style={styles.container}>
           <View style={styles.header}>
             <Header title="Status" />
@@ -127,7 +115,7 @@ export default function Status() {
             contentContainerStyle={{
               gap: spacingY._20,
               paddingTop: spacingY._5,
-              paddingBottom: verticalScale(100),
+              // paddingBottom: verticalScale(100),
             }}
             showsVerticalScrollIndicator={false}
           >
@@ -173,11 +161,19 @@ export default function Status() {
               ) : (
                 <View style={styles.noChart}></View>
               )}
-              {chartLoading && (
+              {loading && (
                 <View style={styles.chartLoadingContainer}>
                   <Loading color={colors.white} />
                 </View>
               )}
+            </View>
+            {/* transactions */}
+            <View>
+              <TransactionList
+                data={transactions}
+                title="Transactions"
+                emptyListMessage="No transactions found"
+              />
             </View>
           </ScrollView>
         </View>
