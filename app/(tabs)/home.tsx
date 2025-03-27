@@ -37,7 +37,10 @@ export default function Home() {
               {user?.name}
             </Typo>
           </View>
-          <TouchableOpacity style={styles.searchIcon}>
+          <TouchableOpacity
+            onPress={() => router.push("/(modals)/searchModal")}
+            style={styles.searchIcon}
+          >
             <FontAwesome
               name="search"
               size={verticalScale(22)}

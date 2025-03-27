@@ -25,13 +25,13 @@ export default function Profile() {
     {
       icon: <Ionicons name="settings-outline" size={24} color={colors.text} />,
       title: "Settings",
-      routeName: "settings",
+      routeName: "(modals)/settingsModal",
       bgColor: "#059669",
     },
     {
       icon: <MaterialIcons name="privacy-tip" size={24} color={colors.text} />,
       title: "Privacy & Policy",
-      // routeName: "privacyAndPolicy",
+      routeName: "(modals)/privacyPolicyModal",
       bgColor: colors.neutral600,
     },
     {

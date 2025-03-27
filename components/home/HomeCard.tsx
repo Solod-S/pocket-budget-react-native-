@@ -53,7 +53,8 @@ export const HomeCard = () => {
             />
           </View>
           <Typo color={colors.black} size={30} fontWeight={"bold"}>
-            $ {walletsLoading ? "---" : getTotals()?.balance?.toFixed(2)}
+            {user?.currency}
+            {walletsLoading ? "---" : getTotals()?.balance?.toFixed(2)}
           </Typo>
         </View>
         {/* Total expense and income */}
@@ -70,7 +71,8 @@ export const HomeCard = () => {
             </View>
             <View style={{ alignSelf: "center" }}>
               <Typo size={17} color={colors.green} fontWeight={"600"}>
-                $ {walletsLoading ? "---" : getTotals()?.income?.toFixed(2)}
+                {user?.currency}{" "}
+                {walletsLoading ? "---" : getTotals()?.income?.toFixed(2)}
               </Typo>
             </View>
           </View>
@@ -86,7 +88,8 @@ export const HomeCard = () => {
             </View>
             <View style={{ alignSelf: "center" }}>
               <Typo size={17} color={colors.rose} fontWeight={"600"}>
-                $ {walletsLoading ? "---" : getTotals()?.expense?.toFixed(2)}
+                {user?.currency}{" "}
+                {walletsLoading ? "---" : getTotals()?.expense?.toFixed(2)}
               </Typo>
             </View>
           </View>

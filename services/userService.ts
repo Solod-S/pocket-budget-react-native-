@@ -1,5 +1,5 @@
 import { auth, db } from "@/config/firebase";
-import { ResponseType, UserDataType } from "@/types";
+import { ResponseType, SettingsDataType, UserDataType } from "@/types";
 import { updateProfile } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 
@@ -20,6 +20,22 @@ export const updateUser = async (
         photoURL: updateData?.image || updateData.image,
       });
     }
+    return { success: true, msg: "Updated successfully" };
+  } catch (error: any) {
+    console.log(`Error in updateUser: `, error);
+    return { success: false, msg: error?.message };
+  }
+};
+
+export const updateSettingsUser = async (
+  uid: string,
+  updateData: SettingsDataType
+): Promise<ResponseType> => {
+  try {
+    // Updating data in Firestore
+    const userRef = doc(db, "users", uid);
+    await updateDoc(userRef, updateData);
+
     return { success: true, msg: "Updated successfully" };
   } catch (error: any) {
     console.log(`Error in updateUser: `, error);

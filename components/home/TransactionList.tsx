@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TransactionListType, TransactionType } from "@/types";
 import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { Loading, Typo } from "../ui";
@@ -8,6 +8,7 @@ import { TransactionItem } from "./TransactionItem";
 import { verticalScale } from "@/utils/styling";
 import { useRouter } from "expo-router";
 import { Timestamp } from "firebase/firestore";
+import useAuthStore from "@/store/authStore";
 
 export const TransactionList = ({
   data,
@@ -15,6 +16,9 @@ export const TransactionList = ({
   loading,
   emptyListMessage,
 }: TransactionListType) => {
+  const { user } = useAuthStore();
+  const [currentCurrency, setCurrentCurrency] = useState("$");
+
   const router = useRouter();
   const handleClick = (item: TransactionType) => {
     router.push({
@@ -34,6 +38,10 @@ export const TransactionList = ({
     // open details in modal
   };
 
+  useEffect(() => {
+    if (user?.currency) setCurrentCurrency(user?.currency);
+  }, [user]);
+
   return (
     <View style={styles.container}>
       {title && (
@@ -44,9 +52,11 @@ export const TransactionList = ({
       <View style={styles.list}>
         <FlashList
           data={data}
+          extraData={currentCurrency}
           renderItem={({ item, index }) => (
             <TransactionItem
               handleClick={handleClick}
+              currency={currentCurrency}
               item={item}
               index={index}
             />

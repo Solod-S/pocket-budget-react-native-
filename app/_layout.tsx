@@ -50,6 +50,18 @@ const RootLayout = () => {
           name="(modals)/transactionModal"
           options={{ headerShown: false, presentation: "modal" }}
         />
+        <Stack.Screen
+          name="(modals)/searchModal"
+          options={{ headerShown: false, presentation: "modal" }}
+        />
+        <Stack.Screen
+          name="(modals)/settingsModal"
+          options={{ headerShown: false, presentation: "modal" }}
+        />
+        <Stack.Screen
+          name="(modals)/privacyPolicyModal"
+          options={{ headerShown: false, presentation: "modal" }}
+        />
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="index" options={{ headerShown: false }} />
       </Stack>

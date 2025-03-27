@@ -14,10 +14,12 @@ export const WalletListItem = ({
   item,
   index,
   router,
+  currency,
 }: {
   item: WalletType;
   index: number;
   router: Router;
+  currency: string;
 }) => {
   const openWallet = () => {
     router.push({
@@ -43,7 +45,8 @@ export const WalletListItem = ({
         <View style={styles.nameContainer}>
           <Typo size={16}>{item?.name}</Typo>
           <Typo size={14} color={colors.neutral400}>
-            ${item?.amount}
+            {currency}
+            {item?.amount}
           </Typo>
         </View>
         <Entypo name="chevron-small-right" size={24} color={colors.text} />

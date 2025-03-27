@@ -140,7 +140,7 @@ export default function Status() {
                   roundedTop
                   // roundedBottom
                   hideRules
-                  yAxisLabelPrefix="$"
+                  yAxisLabelPrefix={user?.currency}
                   yAxisThickness={0}
                   xAxisThickness={0}
                   yAxisLabelWidth={

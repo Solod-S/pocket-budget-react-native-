@@ -103,6 +103,7 @@ export type TransactionItemProps = {
   item: TransactionType;
   index: number;
   handleClick: Function;
+  currency: string;
 };
 
 export interface InputProps extends TextInputProps {
@@ -136,11 +137,18 @@ export type UserType = {
   email?: string | null;
   name: string | null;
   image?: any;
+  language?: string;
+  currency?: string;
 } | null;
 
 export type UserDataType = {
   name: string;
   image?: any;
+};
+
+export type SettingsDataType = {
+  language: string;
+  currency?: any;
 };
 
 export type AuthContextType = {

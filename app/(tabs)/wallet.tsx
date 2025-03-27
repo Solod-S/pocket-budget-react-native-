@@ -34,7 +34,8 @@ export default function Wallet() {
         <View style={styles.balanceView}>
           <View style={{ alignItems: "center" }}>
             <Typo fontWeight={"500"} size={45}>
-              ${getTotalBalance()?.toFixed(2)}
+              {user?.currency}
+              {getTotalBalance()?.toFixed(2)}
             </Typo>
             <Typo size={16} color={colors.neutral300}>
               Total Balance
@@ -63,7 +64,12 @@ export default function Wallet() {
             contentContainerStyle={styles.listStyle}
             renderItem={({ item, index }) => {
               return (
-                <WalletListItem router={router} item={item} index={index} />
+                <WalletListItem
+                  currency={user?.currency || "$"}
+                  router={router}
+                  item={item}
+                  index={index}
+                />
               );
             }}
           />

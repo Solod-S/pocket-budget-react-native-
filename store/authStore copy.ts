@@ -53,8 +53,6 @@ const useAuthStore = create<AuthState>(set => ({
           name: data.name,
           uid: data.uid,
           image: data.image,
-          language: data?.language || "en",
-          currency: data?.currency || "$",
         },
         isAuthenticated: true,
       });
@@ -106,8 +104,6 @@ const useAuthStore = create<AuthState>(set => ({
         email,
         name,
         uid: user.uid,
-        language: "en",
-        currency: "$",
         lastGeneratedAt: null,
       });
       return { success: true, data: user };

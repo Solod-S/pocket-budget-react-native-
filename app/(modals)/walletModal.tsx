@@ -5,6 +5,7 @@ import { scale } from "@/utils/styling";
 import {
   BackButton,
   Button,
+  CustomKeyboardView,
   ImageLinkHandler,
   Input,
   ModalWrapper,
@@ -117,36 +118,40 @@ export default function WalletModal() {
           leftIcon={<BackButton />}
           style={{ marginBottom: spacingY._10 }}
         />
-        <ScrollView style={styles.form}>
-          <View style={styles.inputContainer}>
-            <Typo color={colors.neutral200} size={16}>
-              Wallet Name
-            </Typo>
-            <Input
-              placeholder="Salary"
-              value={walletData.name}
-              onChangeText={value =>
-                setWalletData(prevState => ({ ...prevState, name: value }))
-              }
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <View style={styles.flexRow}>
+
+        {/* form */}
+        <CustomKeyboardView>
+          <ScrollView style={styles.form}>
+            <View style={styles.inputContainer}>
               <Typo color={colors.neutral200} size={16}>
-                Icon url
+                Wallet Name
               </Typo>
-              <Typo color={colors.neutral500} size={14}>
-                (optional)
-              </Typo>
+              <Input
+                placeholder="Salary"
+                value={walletData.name}
+                onChangeText={value =>
+                  setWalletData(prevState => ({ ...prevState, name: value }))
+                }
+              />
             </View>
-            <ImageLinkHandler
-              url={walletData.image}
-              onClear={handleImageUrlChange}
-              onSelect={handleImageUrlChange}
-              placeholder="Upload image"
-            />
-          </View>
-        </ScrollView>
+            <View style={styles.inputContainer}>
+              <View style={styles.flexRow}>
+                <Typo color={colors.neutral200} size={16}>
+                  Icon url
+                </Typo>
+                <Typo color={colors.neutral500} size={14}>
+                  (optional)
+                </Typo>
+              </View>
+              <ImageLinkHandler
+                url={walletData.image}
+                onClear={handleImageUrlChange}
+                onSelect={handleImageUrlChange}
+                placeholder="Upload image"
+              />
+            </View>
+          </ScrollView>
+        </CustomKeyboardView>
         <View style={styles.footer}>
           {oldWallet?.id && !loading && (
             <Button

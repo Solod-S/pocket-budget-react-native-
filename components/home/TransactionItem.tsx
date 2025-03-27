@@ -12,6 +12,7 @@ export const TransactionItem = ({
   item,
   index,
   handleClick,
+  currency,
 }: TransactionItemProps) => {
   // const category = expenseCategories["rent"];
   const category =
@@ -55,7 +56,9 @@ export const TransactionItem = ({
             fontWeight={"500"}
             color={item?.type === "income" ? colors.green : colors.rose}
           >
-            {`${item?.type === "income" ? "+ $" : "- $"}${item?.amount}`}
+            {`${item?.type === "income" ? `+ ${currency}` : `- ${currency}`}${
+              item?.amount
+            }`}
           </Typo>
           <Typo size={13} color={colors.neutral400}>
             {date}

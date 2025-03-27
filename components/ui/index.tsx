@@ -6,6 +6,6 @@ export { Button } from "./Button";
 export { Loading } from "./Loading";
 export { BackButton } from "./BackButton";
 export { Input } from "./Input";
-export { CustomKeyboardView } from "./customKeyboardView";
+export { CustomKeyboardView } from "./CustomKeyboardView";
 export { CustomTabs } from "./CustomTabs";
 export { ImageLinkHandler } from "./ImageLinkHandler";

@@ -13,6 +13,7 @@ import { scale, verticalScale } from "@/utils/styling";
 import {
   BackButton,
   Button,
+  CustomKeyboardView,
   Input,
   ModalWrapper,
   ScreenWrapper,
@@ -87,32 +88,37 @@ export default function ProfileModal() {
           leftIcon={<BackButton />}
           style={{ marginBottom: spacingY._10 }}
         />
-        <ScrollView style={styles.form}>
-          <View style={styles.avatarContainer}>
-            <Image
-              style={styles.avatar}
-              source={getProfileImage(userData.image)}
-              transition={100}
-            />
-            <TouchableOpacity onPress={handleImageEdit} style={styles.editIcon}>
-              <MaterialIcons
-                name="edit"
-                size={verticalScale(22)}
-                color={colors.neutral600}
+        <CustomKeyboardView>
+          <ScrollView style={styles.form}>
+            <View style={styles.avatarContainer}>
+              <Image
+                style={styles.avatar}
+                source={getProfileImage(userData.image)}
+                transition={100}
               />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.inputContainer}>
-            <Typo color={colors.neutral200}>Name</Typo>
-            <Input
-              placeholder="Name"
-              value={userData.name}
-              onChangeText={value =>
-                setUserData(prevState => ({ ...prevState, name: value }))
-              }
-            />
-          </View>
-        </ScrollView>
+              <TouchableOpacity
+                onPress={handleImageEdit}
+                style={styles.editIcon}
+              >
+                <MaterialIcons
+                  name="edit"
+                  size={verticalScale(22)}
+                  color={colors.neutral600}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.inputContainer}>
+              <Typo color={colors.neutral200}>Name</Typo>
+              <Input
+                placeholder="Name"
+                value={userData.name}
+                onChangeText={value =>
+                  setUserData(prevState => ({ ...prevState, name: value }))
+                }
+              />
+            </View>
+          </ScrollView>
+        </CustomKeyboardView>
         <View style={styles.footer}>
           <Button loading={loading} onPress={handleSubmit} style={{ flex: 1 }}>
             <Typo size={22} color={colors.neutral100} fontWeight={"600"}>
