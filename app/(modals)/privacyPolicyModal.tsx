@@ -3,26 +3,27 @@ import React from "react";
 import { colors, spacingX, spacingY } from "@/constants/theme";
 import { BackButton, ModalWrapper, Typo } from "@/components";
 import { Header } from "@/components";
+import { FormattedMessage, useIntl } from "react-intl";
 
 export default function PrivacyPolicyModal() {
+  const intl = useIntl();
+
   return (
     <ModalWrapper style={{ backgroundColor: colors.neutral900 }}>
       <View style={styles.container}>
         <Header
-          title="Privacy Policy"
+          title={intl.formatMessage({ id: "privacyPolicyModal.title" })}
           leftIcon={<BackButton />}
           style={{ marginBottom: spacingY._10 }}
         />
 
         <ScrollView style={styles.content}>
           <Typo color={colors.neutral200}>
-            Your data is not shared with third parties. We use it solely to
-            provide our services and improve the user experience.
+            <FormattedMessage id="privacyPolicyModal.description" />
           </Typo>
 
           <Typo color={colors.neutral200} style={styles.paragraph}>
-            If you have any questions about our privacy policy, please contact
-            us via email at{" "}
+            <FormattedMessage id="privacyPolicyModal.contact" />{" "}
             <Typo color={colors.neutral200} style={styles.email}>
               solik098@gmail.com
             </Typo>

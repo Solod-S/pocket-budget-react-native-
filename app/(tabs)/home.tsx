@@ -9,8 +9,10 @@ import { FontAwesome } from "@expo/vector-icons/";
 import { useRouter } from "expo-router";
 import { limit, orderBy, where } from "firebase/firestore";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { FormattedMessage, useIntl } from "react-intl";
 
 export default function Home() {
+  const intl = useIntl();
   const router = useRouter();
   const { user } = useAuthStore();
 
@@ -31,7 +33,7 @@ export default function Home() {
         <View style={styles.header}>
           <View style={{ gap: 4 }}>
             <Typo size={16} color={colors.neutral400}>
-              Hello,
+              <FormattedMessage id="home.hello" />,
             </Typo>
             <Typo size={16} fontWeight={"500"}>
               {user?.name}
@@ -57,8 +59,8 @@ export default function Home() {
           </View>
           <TransactionList
             data={recentTransactions}
-            emptyListMessage="No Transaction added yet!"
-            title="Recent Transaction"
+            emptyListMessage={intl.formatMessage({ id: "home.noTransactions" })}
+            title={intl.formatMessage({ id: "home.recentTransactions" })}
             loading={transactionLoading}
           />
         </ScrollView>

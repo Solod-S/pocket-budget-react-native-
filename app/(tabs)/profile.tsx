@@ -10,58 +10,56 @@ import { accountOptionType } from "@/types";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import useAuthStore from "@/store/authStore";
+import { FormattedMessage, useIntl } from "react-intl";
 
 export default function Profile() {
+  const intl = useIntl();
   const { logout, user } = useAuthStore();
   const router = useRouter();
 
   const accountOption: accountOptionType[] = [
     {
       icon: <AntDesign name="user" size={24} color={colors.text} />,
-      title: "Edit Profile",
+      title: intl.formatMessage({ id: "profile.title" }),
       routeName: "(modals)/profileModal",
       bgColor: "#6366f1",
     },
     {
       icon: <Ionicons name="settings-outline" size={24} color={colors.text} />,
-      title: "Settings",
+      title: intl.formatMessage({ id: "profile.settings" }),
       routeName: "(modals)/settingsModal",
       bgColor: "#059669",
     },
     {
       icon: <MaterialIcons name="privacy-tip" size={24} color={colors.text} />,
-      title: "Privacy & Policy",
+      title: intl.formatMessage({ id: "profile.privacyPolicy" }),
       routeName: "(modals)/privacyPolicyModal",
       bgColor: colors.neutral600,
     },
     {
       icon: <AntDesign name="logout" size={24} color={colors.text} />,
-      title: "Logout",
-      // routeName: "privacyAndPolicy",
+      title: intl.formatMessage({ id: "profile.logout" }),
       bgColor: "#e11d48",
     },
-    // {
-    //   icon: (
-    //     <MaterialIcons name="favorite-border" size={24} color={colors.text} />
-    //   ),
-    //   title: "Favourites",
-    //   routeName: "favourites",
-    // },
   ];
 
   const showAlert = () => {
-    Alert.alert("Confirm", "Are you sure you want to logout?", [
-      {
-        text: "Cancel",
-        onPress: () => console.log(`cancel logout`),
-        style: "cancel",
-      },
-      {
-        text: "Logout",
-        onPress: () => handleLogOut(),
-        style: "destructive",
-      },
-    ]);
+    Alert.alert(
+      intl.formatMessage({ id: "profile.confirm" }),
+      intl.formatMessage({ id: "profile.confirmLogout" }),
+      [
+        {
+          text: intl.formatMessage({ id: "profile.cancel" }),
+          onPress: () => console.log(`cancel logout`),
+          style: "cancel",
+        },
+        {
+          text: intl.formatMessage({ id: "profile.logout" }),
+          onPress: () => handleLogOut(),
+          style: "destructive",
+        },
+      ]
+    );
   };
 
   const handleLogOut = async () => {
@@ -73,7 +71,7 @@ export default function Profile() {
   };
 
   const handlePress = (item: accountOptionType) => {
-    if (item.title == "Logout") showAlert();
+    if (item.bgColor == "#e11d48") showAlert();
 
     if (item.routeName) router.push(item.routeName);
   };
@@ -81,7 +79,10 @@ export default function Profile() {
   return (
     <ScreenWrapper>
       <View style={styles.container}>
-        <Header title={"Profile"} style={{ marginVertical: spacingY._10 }} />
+        <Header
+          title={intl.formatMessage({ id: "profile.title" })}
+          style={{ marginVertical: spacingY._10 }}
+        />
         {/* User info */}
         <View style={styles.userInfo}>
           {/* Avatar */}
@@ -113,7 +114,7 @@ export default function Profile() {
                   .springify()
                   .damping(14)}
                 style={styles.listItem}
-                key={item.title}
+                key={item.bgColor}
               >
                 <TouchableOpacity
                   onPress={() => handlePress(item)}

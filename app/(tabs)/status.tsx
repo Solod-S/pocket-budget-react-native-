@@ -12,6 +12,7 @@ import {
   fetchYearlyChartData,
 } from "@/services";
 import { TransactionList } from "@/components/home";
+import { FormattedMessage, useIntl } from "react-intl";
 
 // const chartExmpl = [
 //   {
@@ -30,11 +31,14 @@ import { TransactionList } from "@/components/home";
 // ];
 
 export default function Status() {
+  const intl = useIntl();
   const { user } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [chart, setChart] = useState([]);
   const [transactions, setTransactions] = useState([]);
+
+  const m = intl.formatMessage({ id: "status.title" });
 
   useEffect(() => {
     switch (true) {
@@ -109,7 +113,7 @@ export default function Status() {
       <View style={{ paddingBottom: verticalScale(180) }}>
         <View style={styles.container}>
           <View style={styles.header}>
-            <Header title="Status" />
+            <Header title={intl.formatMessage({ id: "status.title" })} />
           </View>
           <ScrollView
             contentContainerStyle={{
@@ -120,7 +124,11 @@ export default function Status() {
             showsVerticalScrollIndicator={false}
           >
             <SegmentedControl
-              values={["Weekly", "Monthly", "Yearly"]}
+              values={[
+                intl.formatMessage({ id: "status.weekly" }),
+                intl.formatMessage({ id: "status.monthly" }),
+                intl.formatMessage({ id: "status.yearly" }),
+              ]}
               selectedIndex={activeIndex}
               onChange={event => {
                 setActiveIndex(event.nativeEvent.selectedSegmentIndex);
@@ -171,8 +179,10 @@ export default function Status() {
             <View>
               <TransactionList
                 data={transactions}
-                title="Transactions"
-                emptyListMessage="No transactions found"
+                title={intl.formatMessage({ id: "status.transactions" })}
+                emptyListMessage={intl.formatMessage({
+                  id: "status.noTransactions",
+                })}
               />
             </View>
           </ScrollView>

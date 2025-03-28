@@ -16,7 +16,6 @@ import {
   CustomKeyboardView,
   Input,
   ModalWrapper,
-  ScreenWrapper,
   Typo,
 } from "@/components";
 import { Header } from "@/components/";
@@ -26,8 +25,10 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { UserDataType, UserType } from "@/types";
 import useAuthStore from "@/store/authStore";
 import { useRouter } from "expo-router";
+import { FormattedMessage, useIntl } from "react-intl";
 
 export default function ProfileModal() {
+  const intl = useIntl();
   const router = useRouter();
   const { user, updateUserData } = useAuthStore();
   const [imageUrl, setImageUrl] = useState(user?.image || "");
@@ -54,7 +55,10 @@ export default function ProfileModal() {
   const handleSubmit = async () => {
     let { name, image } = userData;
     if (!name.trim()) {
-      Alert.alert("User", "Please fill all the fields");
+      Alert.alert(
+        intl.formatMessage({ id: "profileModal.user" }),
+        intl.formatMessage({ id: "profileModal.error" })
+      );
       return;
     }
 
@@ -84,7 +88,7 @@ export default function ProfileModal() {
     <ModalWrapper>
       <View style={styles.container}>
         <Header
-          title="Update Profile"
+          title={intl.formatMessage({ id: "profileModal.title" })}
           leftIcon={<BackButton />}
           style={{ marginBottom: spacingY._10 }}
         />
@@ -108,9 +112,11 @@ export default function ProfileModal() {
               </TouchableOpacity>
             </View>
             <View style={styles.inputContainer}>
-              <Typo color={colors.neutral200}>Name</Typo>
+              <Typo color={colors.neutral200}>
+                <FormattedMessage id="profileModal.name" />
+              </Typo>
               <Input
-                placeholder="Name"
+                placeholder={intl.formatMessage({ id: "profileModal.name" })}
                 value={userData.name}
                 onChangeText={value =>
                   setUserData(prevState => ({ ...prevState, name: value }))
@@ -122,7 +128,7 @@ export default function ProfileModal() {
         <View style={styles.footer}>
           <Button loading={loading} onPress={handleSubmit} style={{ flex: 1 }}>
             <Typo size={22} color={colors.neutral100} fontWeight={"600"}>
-              Update
+              <FormattedMessage id="profileModal.updateButton" />
             </Typo>
           </Button>
         </View>
@@ -137,10 +143,14 @@ export default function ProfileModal() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Edit Image URL</Text>
+            <Text style={styles.modalTitle}>
+              <FormattedMessage id="profileModal.editImageTitle" />
+            </Text>
 
             <Input
-              placeholder="Enter image URL"
+              placeholder={intl.formatMessage({
+                id: "profileModal.enterImageUrl",
+              })}
               value={imageUrl}
               onChangeText={handleImageUrlChange}
             />
@@ -157,7 +167,10 @@ export default function ProfileModal() {
 
             <View style={styles.modalButtons}>
               <Button onPress={handleCancelEdit} style={styles.cancelButton}>
-                <Typo color={colors.neutral100}>Cancel</Typo>
+                <Typo color={colors.neutral100}>
+                  {" "}
+                  <FormattedMessage id="profileModal.cancel" />
+                </Typo>
               </Button>
               <Button
                 onPress={() => {
@@ -166,7 +179,9 @@ export default function ProfileModal() {
                 }}
                 style={styles.saveButton}
               >
-                <Typo color={colors.neutral100}>Save</Typo>
+                <Typo color={colors.neutral100}>
+                  <FormattedMessage id="profileModal.save" />
+                </Typo>
               </Button>
             </View>
           </View>

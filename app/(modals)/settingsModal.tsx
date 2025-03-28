@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { colors, spacingX, spacingY } from "@/constants/theme";
-import { scale, verticalScale } from "@/utils/styling";
+import { scale } from "@/utils/styling";
 import {
   BackButton,
   Button,
@@ -22,10 +22,11 @@ import { SettingsDataType } from "@/types";
 import useAuthStore from "@/store/authStore";
 import { useRouter } from "expo-router";
 import Modal from "react-native-modal";
+import { FormattedMessage, useIntl } from "react-intl";
 
 const LANGUAGES = [
   { label: "English", value: "en" },
-  { label: "Українська", value: "ua" },
+  { label: "Українська", value: "uk" },
   { label: "Русский", value: "ru" },
   { label: "Français", value: "fr" },
   { label: "Deutsch", value: "de" },
@@ -40,6 +41,7 @@ const CURRENCIES = [
 ];
 
 export default function SettingsModal() {
+  const intl = useIntl();
   const router = useRouter();
   const { user, updateUserData } = useAuthStore();
   const [loading, setLoading] = useState(false);
@@ -82,7 +84,7 @@ export default function SettingsModal() {
     <ModalWrapper>
       <View style={styles.container}>
         <Header
-          title="Settings"
+          title={intl.formatMessage({ id: "settingsModal.title" })}
           leftIcon={<BackButton />}
           style={{ marginBottom: spacingY._10 }}
         />
@@ -90,7 +92,9 @@ export default function SettingsModal() {
           <ScrollView style={styles.form}>
             {/* Language Select */}
             <View style={styles.inputContainer}>
-              <Typo color={colors.neutral200}>Language</Typo>
+              <Typo color={colors.neutral200}>
+                <FormattedMessage id="settingsModal.language" />
+              </Typo>
               <TouchableOpacity
                 style={styles.selectBox}
                 onPress={() => setLanguageModalVisible(true)}
@@ -106,7 +110,9 @@ export default function SettingsModal() {
 
             {/* Currency Select */}
             <View style={styles.inputContainer}>
-              <Typo color={colors.neutral200}>Currency</Typo>
+              <Typo color={colors.neutral200}>
+                <FormattedMessage id="settingsModal.currency" />
+              </Typo>
               <TouchableOpacity
                 style={styles.selectBox}
                 onPress={() => setCurrencyModalVisible(true)}
@@ -125,7 +131,7 @@ export default function SettingsModal() {
         <View style={styles.footer}>
           <Button loading={loading} onPress={handleSubmit} style={{ flex: 1 }}>
             <Typo size={22} color={colors.neutral100} fontWeight={"600"}>
-              Save
+              <FormattedMessage id="settingsModal.save" />
             </Typo>
           </Button>
         </View>
@@ -137,7 +143,9 @@ export default function SettingsModal() {
         onBackdropPress={() => setLanguageModalVisible(false)}
       >
         <View style={styles.modalContent}>
-          <Typo style={styles.modalTitle}>Select Language</Typo>
+          <Typo style={styles.modalTitle}>
+            <FormattedMessage id="settingsModal.selectLanguage" />
+          </Typo>
           <FlatList
             data={LANGUAGES}
             keyExtractor={item => item.value}
@@ -162,7 +170,9 @@ export default function SettingsModal() {
         onBackdropPress={() => setCurrencyModalVisible(false)}
       >
         <View style={styles.modalContent}>
-          <Typo style={styles.modalTitle}>Select Currency</Typo>
+          <Typo style={styles.modalTitle}>
+            <FormattedMessage id="settingsModal.selectCurrency" />
+          </Typo>
           <FlatList
             data={CURRENCIES}
             keyExtractor={item => item.value}

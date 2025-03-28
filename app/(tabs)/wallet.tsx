@@ -8,6 +8,7 @@ import { useFetchData } from "@/hooks";
 import { WalletType } from "@/types";
 import { orderBy, where } from "firebase/firestore";
 import useAuthStore from "@/store/authStore";
+import { FormattedMessage } from "react-intl";
 
 export default function Wallet() {
   const { user } = useAuthStore();
@@ -38,7 +39,7 @@ export default function Wallet() {
               {getTotalBalance()?.toFixed(2)}
             </Typo>
             <Typo size={16} color={colors.neutral300}>
-              Total Balance
+              <FormattedMessage id="wallets.totalBalance" />
             </Typo>
           </View>
         </View>
@@ -46,7 +47,7 @@ export default function Wallet() {
         <View style={styles.wallets}>
           <View style={styles.flexRow}>
             <Typo fontWeight={"500"} size={20}>
-              My Wallets
+              <FormattedMessage id="wallets.myWallets" />
             </Typo>
             <TouchableOpacity
               onPress={() => router.push("/(modals)/walletModal")}

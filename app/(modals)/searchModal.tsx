@@ -1,29 +1,18 @@
-import { Alert, ScrollView, StyleSheet, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import React, { useState } from "react";
 import { colors, spacingX, spacingY } from "@/constants/theme";
-import { scale } from "@/utils/styling";
-import {
-  BackButton,
-  Button,
-  ImageLinkHandler,
-  Input,
-  ModalWrapper,
-  Typo,
-} from "@/components";
+import { BackButton, Input, ModalWrapper } from "@/components";
 import { Header } from "@/components";
-import { createOrUpdateWalletData, deleteWalletData } from "@/services";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { TransactionType, WalletType } from "@/types";
+import { TransactionType } from "@/types";
 import useAuthStore from "@/store/authStore";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { limit, orderBy, where } from "firebase/firestore";
+import { orderBy, where } from "firebase/firestore";
 import { useFetchData } from "@/hooks";
 import { TransactionList } from "@/components/home";
+import { useIntl } from "react-intl";
 
 export default function SearchModal() {
-  const router = useRouter();
+  const intl = useIntl();
   const { user, updateUserData } = useAuthStore();
-  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
 
   const constains = [where("uid", "==", user?.uid), orderBy("date", "desc")];
@@ -51,7 +40,7 @@ export default function SearchModal() {
     <ModalWrapper style={{ backgroundColor: colors.neutral900 }}>
       <View style={styles.container}>
         <Header
-          title="Search"
+          title={intl.formatMessage({ id: "searchModal.title" })}
           leftIcon={<BackButton />}
           style={{ marginBottom: spacingY._10 }}
         />
@@ -62,7 +51,9 @@ export default function SearchModal() {
             <Input
               placeholderTextColor={colors.neutral400}
               containerStyle={{ backgroundColor: colors.neutral800 }}
-              placeholder="shoes..."
+              placeholder={intl.formatMessage({
+                id: "searchModal.searchPlaceholder",
+              })}
               value={search}
               onChangeText={value => setSearch(value)}
             />
@@ -71,7 +62,9 @@ export default function SearchModal() {
             <TransactionList
               loading={transactionLoading}
               data={filteredTransactions}
-              emptyListMessage="No transactions match your search keywords"
+              emptyListMessage={intl.formatMessage({
+                id: "searchModal.noTransactions",
+              })}
             />
           </View>
         </ScrollView>

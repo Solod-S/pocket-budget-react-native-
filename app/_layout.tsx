@@ -3,6 +3,7 @@ import { Stack, useRouter, useSegments } from "expo-router";
 import Toast from "react-native-toast-message";
 import { ReactNode, useEffect } from "react";
 import useAuthStore from "../store/authStore";
+import LocalizationProvider from "@/providers/LocalizationProvider";
 
 type MainLayoutProps = {
   children: ReactNode;
@@ -36,36 +37,38 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 const RootLayout = () => {
   return (
     <MainLayout>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="(modals)/profileModal"
-          options={{ headerShown: false, presentation: "modal" }}
-        />
-        <Stack.Screen
-          name="(modals)/walletModal"
-          options={{ headerShown: false, presentation: "modal" }}
-        />
-        <Stack.Screen
-          name="(modals)/transactionModal"
-          options={{ headerShown: false, presentation: "modal" }}
-        />
-        <Stack.Screen
-          name="(modals)/searchModal"
-          options={{ headerShown: false, presentation: "modal" }}
-        />
-        <Stack.Screen
-          name="(modals)/settingsModal"
-          options={{ headerShown: false, presentation: "modal" }}
-        />
-        <Stack.Screen
-          name="(modals)/privacyPolicyModal"
-          options={{ headerShown: false, presentation: "modal" }}
-        />
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-      </Stack>
-      <Toast />
+      <LocalizationProvider>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="(modals)/profileModal"
+            options={{ headerShown: false, presentation: "modal" }}
+          />
+          <Stack.Screen
+            name="(modals)/walletModal"
+            options={{ headerShown: false, presentation: "modal" }}
+          />
+          <Stack.Screen
+            name="(modals)/transactionModal"
+            options={{ headerShown: false, presentation: "modal" }}
+          />
+          <Stack.Screen
+            name="(modals)/searchModal"
+            options={{ headerShown: false, presentation: "modal" }}
+          />
+          <Stack.Screen
+            name="(modals)/settingsModal"
+            options={{ headerShown: false, presentation: "modal" }}
+          />
+          <Stack.Screen
+            name="(modals)/privacyPolicyModal"
+            options={{ headerShown: false, presentation: "modal" }}
+          />
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+        </Stack>
+        <Toast />
+      </LocalizationProvider>
     </MainLayout>
   );
 };

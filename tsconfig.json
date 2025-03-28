@@ -15,6 +15,7 @@
     "app/_layout copy",
     "app/_",
     "app/(tabs)/_",
-    "app/txt"
+    "app/txt",
+    "providers/LocalizationProvider.js"
   ]
 }
