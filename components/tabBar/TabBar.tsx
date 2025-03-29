@@ -14,12 +14,14 @@ const TabBar = ({ state, descriptors, navigation }: any) => {
           index: any
         ) => {
           const { options } = descriptors[route.key];
+
           const label =
             options.tabBarLabel !== undefined
               ? options.tabBarLabel
               : options.title !== undefined
               ? options.title
               : route.name;
+          console.log(`label`, label);
 
           if (["_sitemap", "+not-found"].includes(route.name)) return null;
 

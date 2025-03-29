@@ -8,11 +8,42 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { verticalScale } from "@/utils/styling";
+import { FormattedMessage, useIntl } from "react-intl";
 
 const TabBarButton = (props: any) => {
+  const intl = useIntl();
   const { isFocused, label, routeName, color } = props;
-
+  let translatedLabel = "";
   const scale = useSharedValue(0);
+
+  switch (true) {
+    case label === "home":
+      translatedLabel = intl.formatMessage({
+        id: "tabBarComponent.tabBar.home",
+      });
+      break;
+
+    case label === "wallet":
+      translatedLabel = intl.formatMessage({
+        id: "tabBarComponent.tabBar.wallet",
+      });
+      break;
+
+    case label === "status":
+      translatedLabel = intl.formatMessage({
+        id: "tabBarComponent.tabBar.status",
+      });
+      break;
+
+    case label === "profile":
+      translatedLabel = intl.formatMessage({
+        id: "tabBarComponent.tabBar.profile",
+      });
+      break;
+
+    default:
+      break;
+  }
 
   useEffect(() => {
     scale.value = withSpring(
@@ -56,7 +87,7 @@ const TabBarButton = (props: any) => {
           animatedTextStyle,
         ]}
       >
-        {label}
+        {translatedLabel}
       </Animated.Text>
     </Pressable>
   );

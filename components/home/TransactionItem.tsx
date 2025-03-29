@@ -7,6 +7,7 @@ import { colors, radius, spacingX, spacingY } from "@/constants/theme";
 import { verticalScale } from "@/utils/styling";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { Timestamp } from "firebase/firestore";
+import { FormattedMessage, useIntl } from "react-intl";
 
 export const TransactionItem = ({
   item,
@@ -14,6 +15,7 @@ export const TransactionItem = ({
   handleClick,
   currency,
 }: TransactionItemProps) => {
+  const intl = useIntl();
   // const category = expenseCategories["rent"];
   const category =
     item?.type === "income"

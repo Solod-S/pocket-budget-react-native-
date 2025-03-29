@@ -1,0 +1,22 @@
+export default {
+  updateTransaction: "Transaktion aktualisieren",
+  newTransaction: "Neue Transaktion",
+  type: "Typ",
+  update: "Aktualisieren",
+  submit: "Absenden",
+  category: "Kategorie",
+  amount: "Betrag",
+  date: "Datum",
+  wallet: "Brieftasche",
+  description: "Beschreibung",
+  iconUrl: "Symbol-URL",
+  optional: "optional",
+  transactionAlertTitle: "Transaktion",
+  transactionAlertMessage: "Bitte füllen Sie die folgenden Felder aus",
+  confirmDeleteTitle: "Bestätigen",
+  confirmDeleteMessage:
+    "Sind Sie sicher, dass Sie diese Transaktion durchführen möchten?",
+  cancel: "Abbrechen",
+  delete: "Löschen",
+  transactionError: "Fehler beim Senden der Transaktion",
+};

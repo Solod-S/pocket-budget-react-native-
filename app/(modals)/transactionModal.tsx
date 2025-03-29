@@ -30,8 +30,10 @@ import { orderBy, where } from "firebase/firestore";
 import CalendarPicker from "react-native-calendar-picker";
 import { format } from "date-fns";
 import { deleteTransactionData } from "@/services/transactionServices";
+import { FormattedMessage, useIntl } from "react-intl";
 
 export default function TransactionModal() {
+  const intl = useIntl();
   const { user } = useAuthStore();
   const router = useRouter();
 
@@ -79,15 +81,27 @@ export default function TransactionModal() {
         transactionData;
       const missingFields = [];
 
-      if (type === "expense" && !category) missingFields.push("Category");
-      if (!amount) missingFields.push("Amount");
-      if (!date) missingFields.push("Date");
-      if (!walletId) missingFields.push("Wallet");
+      if (type === "expense" && !category)
+        missingFields.push(
+          intl.formatMessage({ id: "transactionModal.category" })
+        );
+      if (!amount)
+        missingFields.push(
+          intl.formatMessage({ id: "transactionModal.amount" })
+        );
+      if (!date)
+        missingFields.push(intl.formatMessage({ id: "transactionModal.date" }));
+      if (!walletId)
+        missingFields.push(
+          intl.formatMessage({ id: "transactionModal.wallet" })
+        );
 
       if (missingFields.length > 0) {
         Alert.alert(
-          "Transaction",
-          `Please fill in the following fields: ${missingFields.join(", ")}`
+          intl.formatMessage({ id: "transactionModal.transactionAlertTitle" }),
+          `${intl.formatMessage({
+            id: "transactionModal.transactionAlertMessage",
+          })}: ${missingFields.join(", ")}`
         );
         return;
       }
@@ -108,7 +122,10 @@ export default function TransactionModal() {
       if (result.success) {
         router.back();
       } else {
-        Alert.alert("Transaction", result.msg);
+        Alert.alert(
+          intl.formatMessage({ id: "transactionModal.transactionAlertTitle" }),
+          result.msg
+        );
       }
     } catch (error) {
       console.log("Error in submitting transaction: ", error);
@@ -129,7 +146,10 @@ export default function TransactionModal() {
       if (result.success) {
         router.back();
       } else {
-        Alert.alert("Transaction", result.msg);
+        Alert.alert(
+          intl.formatMessage({ id: "transactionModal.transactionAlertTitle" }),
+          result.msg
+        );
       }
     } catch (error) {
       console.log("Error in deleting transaction: ", error);
@@ -139,18 +159,26 @@ export default function TransactionModal() {
   };
 
   const showDeleAlarm = () => {
-    Alert.alert("Confirm", "Are you sure you want to do this transaction?", [
-      {
-        text: "Cancel",
-        onPress: () => console.log("cancel delete"),
-        style: "cancel",
-      },
-      {
-        text: "Delete",
-        onPress: () => handleDelete(),
-        style: "destructive",
-      },
-    ]);
+    Alert.alert(
+      intl.formatMessage({ id: "transactionModal.confirmDeleteTitle" }),
+      intl.formatMessage({ id: "transactionModal.confirmDeleteMessage" }),
+      [
+        {
+          text: intl.formatMessage({
+            id: "transactionModal.cancel",
+          }),
+          onPress: () => console.log("cancel delete"),
+          style: "cancel",
+        },
+        {
+          text: intl.formatMessage({
+            id: "transactionModal.delete",
+          }),
+          onPress: () => handleDelete(),
+          style: "destructive",
+        },
+      ]
+    );
   };
 
   useEffect(() => {
@@ -180,7 +208,11 @@ export default function TransactionModal() {
     <ModalWrapper>
       <View style={styles.container}>
         <Header
-          title={oldTransaction?.id ? "Update Transaction" : "New Transaction"}
+          title={
+            oldTransaction?.id
+              ? intl.formatMessage({ id: "transactionModal.updateTransaction" })
+              : intl.formatMessage({ id: "transactionModal.newTransaction" })
+          }
           leftIcon={<BackButton />}
           style={{
             marginBottom: spacingY._10,
@@ -197,7 +229,7 @@ export default function TransactionModal() {
               ]}
             >
               <Typo color={colors.neutral200} size={16}>
-                Type
+                <FormattedMessage id="transactionModal.type" />
               </Typo>
               {/* dropDown here */}
               <Dropdown
@@ -236,7 +268,7 @@ export default function TransactionModal() {
               ]}
             >
               <Typo color={colors.neutral200} size={16}>
-                Wallet
+                <FormattedMessage id="transactionModal.wallet" />
               </Typo>
               {/* dropDown here */}
               <Dropdown
@@ -303,7 +335,7 @@ export default function TransactionModal() {
                 ]}
               >
                 <Typo color={colors.neutral200} size={16}>
-                  Expense categories
+                  <FormattedMessage id="transactionModal.category" />
                 </Typo>
                 {/* dropDown here */}
                 <Dropdown
@@ -338,7 +370,7 @@ export default function TransactionModal() {
             <View style={styles.inputContainer}>
               <View style={{ paddingHorizontal: spacingX._20 }}>
                 <Typo color={colors.neutral200} size={16}>
-                  Date
+                  <FormattedMessage id="transactionModal.date" />
                 </Typo>
               </View>
               {!showDatePicker ? (
@@ -378,7 +410,7 @@ export default function TransactionModal() {
               ]}
             >
               <Typo color={colors.neutral200} size={16}>
-                Amount
+                <FormattedMessage id="transactionModal.amount" />
               </Typo>
               <Input
                 // placeholder="Amount"
@@ -402,10 +434,10 @@ export default function TransactionModal() {
             >
               <View style={styles.flexRow}>
                 <Typo color={colors.neutral200} size={16}>
-                  Description
+                  <FormattedMessage id="transactionModal.description" />
                 </Typo>
                 <Typo color={colors.neutral500} size={14}>
-                  (optional)
+                  (<FormattedMessage id="transactionModal.optional" />)
                 </Typo>
               </View>
               <Input
@@ -434,10 +466,10 @@ export default function TransactionModal() {
             >
               <View style={styles.flexRow}>
                 <Typo color={colors.neutral200} size={16}>
-                  Icon url
+                  <FormattedMessage id="transactionModal.iconUrl" />
                 </Typo>
                 <Typo color={colors.neutral500} size={14}>
-                  (optional)
+                  (<FormattedMessage id="transactionModal.optional" />)
                 </Typo>
               </View>
               <ImageLinkHandler
@@ -464,7 +496,13 @@ export default function TransactionModal() {
           )}
           <Button loading={loading} onPress={handleSubmit} style={{ flex: 1 }}>
             <Typo size={22} color={colors.neutral100} fontWeight={"600"}>
-              {oldTransaction?.id ? "Update" : "Submit"}
+              {oldTransaction?.id
+                ? intl.formatMessage({
+                    id: "transactionModal.update",
+                  })
+                : intl.formatMessage({
+                    id: "transactionModal.submit",
+                  })}
             </Typo>
           </Button>
         </View>

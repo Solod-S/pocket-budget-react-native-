@@ -1,0 +1,19 @@
+export default {
+  wallet: "Гаманець",
+  title: "Новий гаманець",
+  updateTitle: "Оновити гаманець",
+  walletName: "Назва гаманця",
+  iconUrl: "URL іконки",
+  optional: "необов'язково",
+  uploadImage: "Завантажити зображення",
+  confirmDeleteTitle: "Підтвердити",
+  confirmDeleteMessage:
+    "Ви впевнені, що хочете це зробити? \nЦя дія видалить всі транзакції, пов'язані з цим гаманцем",
+  cancel: "Скасувати",
+  delete: "Видалити",
+  addWallet: "Додати",
+  saveWallet: "Зберегти",
+  deleteWallet: "Видалити гаманець",
+  placeholderWalletName: "Зарплата",
+  pleaseFillAllFields: "Будь ласка, заповніть усі поля",
+};

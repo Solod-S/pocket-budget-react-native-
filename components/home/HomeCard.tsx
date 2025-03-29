@@ -8,6 +8,7 @@ import useAuthStore from "@/store/authStore";
 import { useFetchData } from "@/hooks";
 import { WalletType } from "@/types";
 import { orderBy, where } from "firebase/firestore";
+import { FormattedMessage } from "react-intl";
 
 export const HomeCard = () => {
   const { user } = useAuthStore();
@@ -44,7 +45,8 @@ export const HomeCard = () => {
           {/* Total balance */}
           <View style={styles.totalBalanceRow}>
             <Typo color={colors.neutral800} fontWeight={"500"} size={17}>
-              Total Balance
+              {/* Total Balance */}
+              <FormattedMessage id="homeComponent.homeCard.totalBalance" />
             </Typo>
             <Entypo
               name="dots-three-horizontal"
@@ -66,7 +68,7 @@ export const HomeCard = () => {
                 <AntDesign name="arrowdown" size={24} color="black" />
               </View>
               <Typo size={16} color={colors.neutral700} fontWeight={"500"}>
-                Income
+                <FormattedMessage id="homeComponent.homeCard.income" />
               </Typo>
             </View>
             <View style={{ alignSelf: "center" }}>
@@ -83,7 +85,7 @@ export const HomeCard = () => {
                 <AntDesign name="arrowup" size={24} color="black" />
               </View>
               <Typo size={16} color={colors.neutral700} fontWeight={"500"}>
-                Expense
+                <FormattedMessage id="homeComponent.homeCard.expense" />
               </Typo>
             </View>
             <View style={{ alignSelf: "center" }}>

@@ -71,7 +71,10 @@ export default function SettingsModal() {
         updateUserData(user?.uid as string);
         router.back();
       } else {
-        Alert.alert("User", result.msg);
+        Alert.alert(
+          intl.formatMessage({ id: "settingsModal.title" }),
+          result.msg
+        );
       }
     } catch (error) {
       console.log("Error in submitting user: ", error);

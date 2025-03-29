@@ -1,0 +1,19 @@
+export default {
+  wallet: "Portefeuille",
+  title: "Nouveau Wallet",
+  updateTitle: "Mettre à jour le Wallet",
+  walletName: "Nom du Wallet",
+  iconUrl: "URL de l'icône",
+  optional: "facultatif",
+  uploadImage: "Télécharger l'image",
+  confirmDeleteTitle: "Confirmer",
+  confirmDeleteMessage:
+    "Êtes-vous sûr de vouloir faire cela ? \nCette action supprimera toutes les transactions liées à ce Wallet",
+  cancel: "Annuler",
+  delete: "Supprimer",
+  addWallet: "Ajouter un Wallet",
+  saveWallet: "Enregistrer",
+  deleteWallet: "Supprimer",
+  placeholderWalletName: "Salaire",
+  pleaseFillAllFields: "Veuillez remplir tous les champs",
+};

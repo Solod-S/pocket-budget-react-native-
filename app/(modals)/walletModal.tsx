@@ -17,8 +17,10 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { WalletType } from "@/types";
 import useAuthStore from "@/store/authStore";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { FormattedMessage, useIntl } from "react-intl";
 
 export default function WalletModal() {
+  const intl = useIntl();
   const router = useRouter();
   const oldWallet: { name: string; id: string; image: string } =
     useLocalSearchParams();
@@ -37,7 +39,10 @@ export default function WalletModal() {
   const handleSubmit = async () => {
     let { name, image } = walletData;
     if (!name.trim()) {
-      Alert.alert("Wallet", "Please fill all the fields");
+      Alert.alert(
+        intl.formatMessage({ id: "walletModal.wallet" }),
+        intl.formatMessage({ id: "walletModal.pleaseFillAllFields" })
+      );
       return;
     }
 
@@ -55,7 +60,10 @@ export default function WalletModal() {
       if (result.success) {
         router.back();
       } else {
-        Alert.alert("Wallet", result.msg);
+        Alert.alert(
+          intl.formatMessage({ id: "walletModal.wallet" }),
+          result.msg
+        );
       }
     } catch (error) {
       console.log("Error in submitting wallet: ", error);
@@ -73,7 +81,10 @@ export default function WalletModal() {
       if (result.success) {
         router.back();
       } else {
-        Alert.alert("Wallet", result.msg);
+        Alert.alert(
+          intl.formatMessage({ id: "walletModal.wallet" }),
+          result.msg
+        );
       }
     } catch (error) {
       console.log("Error in deleting wallet: ", error);
@@ -84,16 +95,16 @@ export default function WalletModal() {
 
   const showDeleAlarm = () => {
     Alert.alert(
-      "Confirm",
-      "Are you sure you want to do this? \nThis action will remove all the transactions related to this wallet",
+      intl.formatMessage({ id: "walletModal.confirmDeleteTitle" }),
+      intl.formatMessage({ id: "walletModal.confirmDeleteMessage" }),
       [
         {
-          text: "Cancel",
+          text: intl.formatMessage({ id: "walletModal.cancel" }),
           onPress: () => console.log("cancel delete"),
           style: "cancel",
         },
         {
-          text: "Delete",
+          text: intl.formatMessage({ id: "walletModal.delete" }),
           onPress: () => handleDelete(),
           style: "destructive",
         },
@@ -114,7 +125,11 @@ export default function WalletModal() {
     <ModalWrapper>
       <View style={styles.container}>
         <Header
-          title={oldWallet?.id ? "Update Wallet" : "New Wallet"}
+          title={
+            oldWallet?.id
+              ? intl.formatMessage({ id: "walletModal.updateTitle" })
+              : intl.formatMessage({ id: "walletModal.title" })
+          }
           leftIcon={<BackButton />}
           style={{ marginBottom: spacingY._10 }}
         />
@@ -124,10 +139,12 @@ export default function WalletModal() {
           <ScrollView style={styles.form}>
             <View style={styles.inputContainer}>
               <Typo color={colors.neutral200} size={16}>
-                Wallet Name
+                <FormattedMessage id="walletModal.walletName" />
               </Typo>
               <Input
-                placeholder="Salary"
+                placeholder={intl.formatMessage({
+                  id: "walletModal.placeholderWalletName",
+                })}
                 value={walletData.name}
                 onChangeText={value =>
                   setWalletData(prevState => ({ ...prevState, name: value }))
@@ -137,17 +154,19 @@ export default function WalletModal() {
             <View style={styles.inputContainer}>
               <View style={styles.flexRow}>
                 <Typo color={colors.neutral200} size={16}>
-                  Icon url
+                  <FormattedMessage id="walletModal.iconUrl" />
                 </Typo>
                 <Typo color={colors.neutral500} size={14}>
-                  (optional)
+                  (<FormattedMessage id="walletModal.optional" />)
                 </Typo>
               </View>
               <ImageLinkHandler
                 url={walletData.image}
                 onClear={handleImageUrlChange}
                 onSelect={handleImageUrlChange}
-                placeholder="Upload image"
+                placeholder={intl.formatMessage({
+                  id: "walletModal.uploadImage",
+                })}
               />
             </View>
           </ScrollView>
@@ -167,7 +186,13 @@ export default function WalletModal() {
           )}
           <Button loading={loading} onPress={handleSubmit} style={{ flex: 1 }}>
             <Typo size={22} color={colors.neutral100} fontWeight={"600"}>
-              {oldWallet?.id ? "Save Wallet" : "Add Wallet"}
+              {oldWallet?.id
+                ? intl.formatMessage({
+                    id: "walletModal.saveWallet",
+                  })
+                : intl.formatMessage({
+                    id: "walletModal.addWallet",
+                  })}
             </Typo>
           </Button>
         </View>
