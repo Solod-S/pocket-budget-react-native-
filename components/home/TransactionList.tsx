@@ -17,6 +17,7 @@ export const TransactionList = ({
   emptyListMessage,
 }: TransactionListType) => {
   const { user } = useAuthStore();
+
   const [currentCurrency, setCurrentCurrency] = useState("$");
 
   const router = useRouter();
@@ -51,10 +52,11 @@ export const TransactionList = ({
       )}
       <View style={styles.list}>
         <FlashList
+          extraData={{ currentCurrency, lang: user?.language }}
           data={data}
-          extraData={currentCurrency}
           renderItem={({ item, index }) => (
             <TransactionItem
+              lang={user?.language || "en"}
               handleClick={handleClick}
               currency={currentCurrency}
               item={item}

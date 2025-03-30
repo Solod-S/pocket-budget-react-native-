@@ -104,6 +104,7 @@ export type TransactionItemProps = {
   index: number;
   handleClick: Function;
   currency: string;
+  lang: string;
 };
 
 export interface InputProps extends TextInputProps {

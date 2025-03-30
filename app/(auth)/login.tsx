@@ -45,7 +45,9 @@ export default function Login() {
     } catch (error) {
       console.log(`Error in handleLogin`);
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
     }
   };
 

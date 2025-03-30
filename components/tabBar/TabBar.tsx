@@ -21,7 +21,6 @@ const TabBar = ({ state, descriptors, navigation }: any) => {
               : options.title !== undefined
               ? options.title
               : route.name;
-          console.log(`label`, label);
 
           if (["_sitemap", "+not-found"].includes(route.name)) return null;
 

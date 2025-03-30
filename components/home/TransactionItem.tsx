@@ -14,18 +14,35 @@ export const TransactionItem = ({
   index,
   handleClick,
   currency,
+  lang,
 }: TransactionItemProps) => {
   const intl = useIntl();
   // const category = expenseCategories["rent"];
+  // const category =
+  //   item?.type === "income"
+  //     ? incomeCategory
+  //     : expenseCategories[item.category!];
+
+  // localization
   const category =
     item?.type === "income"
-      ? incomeCategory
-      : expenseCategories[item.category!];
+      ? {
+          ...incomeCategory,
+          label: intl.formatMessage({
+            id: `transactionTypes.${item?.type}`,
+          }),
+        }
+      : {
+          ...expenseCategories[item.category!],
+          label: intl.formatMessage({
+            id: `expenseCategories.${item.category!}`,
+          }),
+        };
   const IconComponent = category.icon;
 
   const date = (item?.date as Timestamp)
     ?.toDate()
-    ?.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+    ?.toLocaleDateString(lang, { day: "numeric", month: "short" });
 
   return (
     <Animated.View

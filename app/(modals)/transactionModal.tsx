@@ -62,6 +62,29 @@ export default function TransactionModal() {
     date: new Date(),
   });
 
+  // localization
+  const localizedExpenseCategories = Object.fromEntries(
+    Object.entries(expenseCategories).map(([key, category]) => [
+      key,
+      {
+        ...category,
+        label: intl.formatMessage({
+          id: `expenseCategories.${category.value}`,
+        }),
+      },
+    ])
+  );
+
+  // localization
+  const localizedTransactionTypes = transactionTypes.map(item => {
+    return {
+      ...item,
+      label: intl.formatMessage({
+        id: `transactionTypes.${item.value}`,
+      }),
+    };
+  });
+
   const {
     data: wallets,
     loading: walletLoading,
@@ -241,7 +264,7 @@ export default function TransactionModal() {
                 placeholderStyle={styles.dropDownPlaceholder}
                 selectedTextStyle={styles.dropDownSelectText}
                 iconStyle={styles.dropDownIcon}
-                data={transactionTypes}
+                data={localizedTransactionTypes}
                 // inputSearchStyle={styles.inputSearchStyle}
                 // search
                 // searchPlaceholder="Search..."
@@ -347,7 +370,7 @@ export default function TransactionModal() {
                   placeholderStyle={styles.dropDownPlaceholder}
                   selectedTextStyle={styles.dropDownSelectText}
                   iconStyle={styles.dropDownIcon}
-                  data={Object.values(expenseCategories)}
+                  data={Object.values(localizedExpenseCategories)}
                   // inputSearchStyle={styles.inputSearchStyle}
                   // search
                   // searchPlaceholder="Search..."

@@ -44,7 +44,9 @@ export default function Register() {
       console.log(`Error in handleRegister`);
       Alert.alert("Error", error?.message);
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
     }
   };
 

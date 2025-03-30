@@ -88,3 +88,11 @@ export const transactionTypes = [
   { label: "Expense", value: "expense" },
   { label: "Income", value: "income" },
 ];
+
+export const languages = [
+  { label: "English", value: "en" },
+  { label: "Українська", value: "uk" },
+  { label: "Русский", value: "ru" },
+  { label: "Français", value: "fr" },
+  { label: "Deutsch", value: "de" },
+];

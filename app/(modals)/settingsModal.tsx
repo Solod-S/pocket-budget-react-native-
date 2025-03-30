@@ -23,14 +23,7 @@ import useAuthStore from "@/store/authStore";
 import { useRouter } from "expo-router";
 import Modal from "react-native-modal";
 import { FormattedMessage, useIntl } from "react-intl";
-
-const LANGUAGES = [
-  { label: "English", value: "en" },
-  { label: "Українська", value: "uk" },
-  { label: "Русский", value: "ru" },
-  { label: "Français", value: "fr" },
-  { label: "Deutsch", value: "de" },
-];
+import { languages } from "@/constants/data";
 
 const CURRENCIES = [
   { label: "$ - USD", value: "$" },
@@ -104,7 +97,7 @@ export default function SettingsModal() {
               >
                 <Typo color={colors.neutral100}>
                   {
-                    LANGUAGES.find(l => l.value === settingsData.language)
+                    languages.find(l => l.value === settingsData.language)
                       ?.label
                   }
                 </Typo>
@@ -150,7 +143,7 @@ export default function SettingsModal() {
             <FormattedMessage id="settingsModal.selectLanguage" />
           </Typo>
           <FlatList
-            data={LANGUAGES}
+            data={languages}
             keyExtractor={item => item.value}
             renderItem={({ item }) => (
               <TouchableOpacity

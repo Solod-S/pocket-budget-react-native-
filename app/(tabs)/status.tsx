@@ -41,30 +41,44 @@ export default function Status() {
   const m = intl.formatMessage({ id: "status.title" });
 
   useEffect(() => {
-    switch (true) {
-      case activeIndex === 0:
-        getWeeklyChart();
-        break;
+    if (user) {
+      switch (true) {
+        case activeIndex === 0:
+          getWeeklyChart();
+          break;
 
-      case activeIndex === 1:
-        getMonthlyChart();
-        break;
+        case activeIndex === 1:
+          getMonthlyChart();
+          break;
 
-      case activeIndex === 2:
-        getYearlyChart();
-        break;
+        case activeIndex === 2:
+          getYearlyChart();
+          break;
 
-      default:
-        break;
+        default:
+          break;
+      }
     }
-  }, [activeIndex]);
+  }, [activeIndex, user?.language]);
 
   const getWeeklyChart = async () => {
     try {
       setLoading(true);
       const res = await fetchWeeklyChartData(user?.uid as string);
       if (res.success) {
-        setChart(res?.data?.stats);
+        const localizedData = res?.data?.stats.map((data: any) => {
+          return {
+            ...data,
+            label: data?.label
+              ? intl.formatMessage({
+                  id: `sevenDays.${data?.label}`,
+                })
+              : "",
+          };
+        });
+
+        setChart(localizedData);
+        // setChart(res?.data?.stats);
         setTransactions(res?.data?.transactions);
       } else {
         Alert.alert("Error", res.msg);
@@ -80,7 +94,22 @@ export default function Status() {
       setLoading(true);
       const res = await fetchMonthlyChartData(user?.uid as string);
       if (res.success) {
-        setChart(res?.data?.stats);
+        const localizedData = res?.data?.stats.map((data: any) => {
+          const firstPartOfLabel = data?.label?.split(" ")[0]; // Month
+          const secondPartOfLabel = data?.label?.split(" ")[1]; // Date
+          return {
+            ...data,
+            label: firstPartOfLabel
+              ? secondPartOfLabel +
+                " " +
+                intl.formatMessage({
+                  id: `monthsOfYear.${firstPartOfLabel}`,
+                })
+              : "",
+          };
+        });
+
+        setChart(localizedData);
         setTransactions(res?.data?.transactions);
       } else {
         Alert.alert("Error", res.msg);
