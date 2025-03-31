@@ -14,10 +14,11 @@ import { verticalScale } from "@/utils/styling";
 import Animated, { FadeIn } from "react-native-reanimated";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
-
+import { FormattedMessage, useIntl } from "react-intl";
 import useAuthStore from "@/store/authStore";
 
 export default function Login() {
+  const intl = useIntl();
   const { login } = useAuthStore();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +30,14 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       if (!emailRef.current || !passwordRef.current) {
-        Alert.alert("Error", "Please fill all the fields");
+        Alert.alert(
+          intl.formatMessage({
+            id: "login.errorTitle",
+          }),
+          intl.formatMessage({
+            id: "login.errorMessage",
+          })
+        );
         return;
       }
 
@@ -40,7 +48,12 @@ export default function Login() {
       );
       setIsLoading(false);
       if (!response.success) {
-        Alert.alert("Error", response.message);
+        Alert.alert(
+          intl.formatMessage({
+            id: "login.errorTitle",
+          }),
+          response.message
+        );
       }
     } catch (error) {
       console.log(`Error in handleLogin`);
@@ -61,15 +74,14 @@ export default function Login() {
           <BackButton iconSize={28} />
           <View style={{ gap: 5 }}>
             <Typo size={30} fontWeight={"800"}>
-              Control
-            </Typo>
-            <Typo size={30} fontWeight={"800"}>
-              Your Budget Easily
+              <FormattedMessage id="login.loginTitle" />
             </Typo>
           </View>
           {/* Form */}
           <View style={styles.form}>
-            <Typo size={16}>Sign in to track your income and expenses</Typo>
+            <Typo size={16}>
+              <FormattedMessage id="login.signInPrompt" />
+            </Typo>
             <Input
               onChangeText={value => {
                 emailRef.current = value;
@@ -81,7 +93,7 @@ export default function Login() {
                   color={colors.neutral400}
                 />
               }
-              placeholder="Enter email"
+              placeholder={intl.formatMessage({ id: "login.emailPlaceholder" })}
             />
             <View style={{ position: "relative", justifyContent: "center" }}>
               <Input
@@ -97,7 +109,9 @@ export default function Login() {
                     color={colors.neutral400}
                   />
                 }
-                placeholder="Enter password"
+                placeholder={intl.formatMessage({
+                  id: "login.passwordPlaceholder",
+                })}
               />
               <TouchableOpacity
                 onPress={() => setSecurePass(prevState => !prevState)}
@@ -121,19 +135,21 @@ export default function Login() {
                 color={colors.text}
                 style={{ alignSelf: "flex-end" }}
               >
-                Forgot Password?
+                <FormattedMessage id="login.forgotPassword" />
               </Typo>
             </TouchableOpacity>
             <Button loading={isLoading} onPress={() => handleLogin()}>
               <Typo size={22} color={colors.neutral100} fontWeight={"600"}>
-                Login
+                <FormattedMessage id="login.loginButton" />
               </Typo>
             </Button>
             <View style={styles.footer}>
-              <Typo size={15}>Donn't have an account?</Typo>
+              <Typo size={15}>
+                <FormattedMessage id="login.noAccount" />
+              </Typo>
               <TouchableOpacity onPress={() => router.replace("/register")}>
                 <Typo fontWeight={"700"} color={colors.primary} size={15}>
-                  Sign up
+                  <FormattedMessage id="login.signUp" />
                 </Typo>
               </TouchableOpacity>
             </View>

@@ -15,8 +15,10 @@ import Animated, { FadeIn } from "react-native-reanimated";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import useAuthStore from "@/store/authStore";
+import { FormattedMessage, useIntl } from "react-intl";
 
 export default function Register() {
+  const intl = useIntl();
   const { register } = useAuthStore();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +30,14 @@ export default function Register() {
   const handleRegister = async () => {
     try {
       if (!nameRef.current || !emailRef.current || !passwordRef.current) {
-        Alert.alert("Error", "Please fill all the fields");
+        Alert.alert(
+          intl.formatMessage({
+            id: "register.errorTitle",
+          }),
+          intl.formatMessage({
+            id: "register.errorFillFields",
+          })
+        );
         return;
       }
       setIsLoading(true);
@@ -38,11 +47,21 @@ export default function Register() {
         nameRef.current
       );
       if (!success) {
-        Alert.alert("Error", message);
+        Alert.alert(
+          intl.formatMessage({
+            id: "register.errorTitle",
+          }),
+          message
+        );
       }
     } catch (error: any) {
       console.log(`Error in handleRegister`);
-      Alert.alert("Error", error?.message);
+      Alert.alert(
+        intl.formatMessage({
+          id: "register.errorTitle",
+        }),
+        error?.message
+      );
     } finally {
       setTimeout(() => {
         setIsLoading(false);
@@ -60,14 +79,14 @@ export default function Register() {
           <BackButton iconSize={28} />
           <View style={{ gap: 5 }}>
             <Typo size={30} fontWeight={"800"}>
-              Start Managing Your Finances
+              <FormattedMessage id="register.title" />
             </Typo>
           </View>
 
           {/* Form */}
           <View style={styles.form}>
             <Typo size={16}>
-              Sign up to track your income and expenses easily
+              <FormattedMessage id="register.subtitle" />
             </Typo>
             <Input
               onChangeText={value => {
@@ -80,7 +99,9 @@ export default function Register() {
                   color={colors.neutral400}
                 />
               }
-              placeholder="Enter name"
+              placeholder={intl.formatMessage({
+                id: "register.namePlaceholder",
+              })}
             />
             <Input
               onChangeText={value => {
@@ -93,7 +114,9 @@ export default function Register() {
                   color={colors.neutral400}
                 />
               }
-              placeholder="Enter email"
+              placeholder={intl.formatMessage({
+                id: "register.emailPlaceholder",
+              })}
             />
             <View style={{ position: "relative", justifyContent: "center" }}>
               <Input
@@ -109,7 +132,9 @@ export default function Register() {
                     color={colors.neutral400}
                   />
                 }
-                placeholder="Enter password"
+                placeholder={intl.formatMessage({
+                  id: "register.passwordPlaceholder",
+                })}
               />
               <TouchableOpacity
                 onPress={() => setSecurePass(prevState => !prevState)}
@@ -130,14 +155,16 @@ export default function Register() {
 
             <Button loading={isLoading} onPress={() => handleRegister()}>
               <Typo size={22} color={colors.neutral100} fontWeight={"600"}>
-                Sign up
+                <FormattedMessage id="register.signUp" />
               </Typo>
             </Button>
             <View style={styles.footer}>
-              <Typo size={15}>Already have an account?</Typo>
+              <Typo size={15}>
+                <FormattedMessage id="register.alreadyHaveAccount" />
+              </Typo>
               <TouchableOpacity onPress={() => router.replace("/login")}>
                 <Typo fontWeight={"700"} color={colors.primary} size={15}>
-                  Sign in
+                  <FormattedMessage id="register.signIn" />
                 </Typo>
               </TouchableOpacity>
             </View>

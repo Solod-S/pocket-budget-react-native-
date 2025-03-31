@@ -6,12 +6,13 @@ import { scale } from "@/utils/styling";
 import { Typo } from "./Typo";
 import { FormattedMessage } from "react-intl";
 import { languages } from "@/constants/data";
+import { LanguageSelectProps } from "@/types";
 
-const LanguageSelect = (
-  isLanguageModalVisible: boolean,
-  setLanguageModalVisible: (arg0: boolean) => void,
-  setSettingsData: (arg0: (prev: any) => any) => void
-) => {
+const LanguageSelect = ({
+  isLanguageModalVisible,
+  setLanguageModalVisible,
+  setSettingsData,
+}: LanguageSelectProps) => {
   return (
     <Modal
       isVisible={isLanguageModalVisible}
@@ -28,8 +29,7 @@ const LanguageSelect = (
             <TouchableOpacity
               style={styles.option}
               onPress={() => {
-                setSettingsData(prev => ({ ...prev, language: item.value }));
-                setLanguageModalVisible(false);
+                setSettingsData(item.value);
               }}
             >
               <Typo color={colors.neutral100}>{item.label}</Typo>

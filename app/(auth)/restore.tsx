@@ -15,8 +15,10 @@ import Animated, { FadeIn } from "react-native-reanimated";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import useAuthStore from "@/store/authStore";
+import { FormattedMessage, useIntl } from "react-intl";
 
 export default function Restore() {
+  const intl = useIntl();
   const router = useRouter();
   const { resetPassword } = useAuthStore();
 
@@ -27,18 +29,34 @@ export default function Restore() {
   const handleRestore = async () => {
     try {
       if (!emailRef.current) {
-        Alert.alert("Error", "Please fill all the fields");
+        Alert.alert(
+          intl.formatMessage({
+            id: "restore.errorTitle",
+          }),
+          intl.formatMessage({
+            id: "restore.errorFillFields",
+          })
+        );
         return;
       }
       setIsLoading(true);
       const response = await resetPassword(emailRef.current.trim());
       setIsLoading(false);
       if (!response.success) {
-        Alert.alert("Error", response.message);
+        Alert.alert(
+          intl.formatMessage({
+            id: "restore.errorTitle",
+          }),
+          response.message
+        );
       } else {
         Alert.alert(
-          "Success",
-          "A password reset email has been sent to your inbox.",
+          intl.formatMessage({
+            id: "restore.successTitle",
+          }),
+          intl.formatMessage({
+            id: "restore.successMessage",
+          }),
           [{ text: "OK", onPress: () => router.replace("/welcome") }]
         );
       }
@@ -59,16 +77,16 @@ export default function Restore() {
           <BackButton iconSize={28} />
           <View style={{ gap: 5 }}>
             <Typo size={30} fontWeight={"800"}>
-              Reset
+              <FormattedMessage id="restore.title1" />
             </Typo>
             <Typo size={30} fontWeight={"800"}>
-              Your Password
+              <FormattedMessage id="restore.title2" />
             </Typo>
           </View>
           {/* Form */}
           <View style={styles.form}>
             <Typo size={16}>
-              Enter your email to receive a password reset link
+              <FormattedMessage id="restore.subtitle" />
             </Typo>
             <Input
               onChangeText={value => {
@@ -81,12 +99,14 @@ export default function Restore() {
                   color={colors.neutral400}
                 />
               }
-              placeholder="Enter email"
+              placeholder={intl.formatMessage({
+                id: "restore.emailPlaceholder",
+              })}
             />
 
             <Button loading={isLoading} onPress={() => handleRestore()}>
               <Typo size={22} color={colors.neutral100} fontWeight={"600"}>
-                Restore
+                <FormattedMessage id="restore.restoreButton" />
               </Typo>
             </Button>
           </View>

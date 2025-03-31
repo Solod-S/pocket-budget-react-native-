@@ -23,15 +23,8 @@ import useAuthStore from "@/store/authStore";
 import { useRouter } from "expo-router";
 import Modal from "react-native-modal";
 import { FormattedMessage, useIntl } from "react-intl";
-import { languages } from "@/constants/data";
-
-const CURRENCIES = [
-  { label: "$ - USD", value: "$" },
-  { label: "₴ - UAH", value: "₴" },
-  { label: "₽ - RUB", value: "₽" },
-  { label: "₣ - CHF", value: "₣" },
-  { label: "€ - EUR", value: "€" },
-];
+import { Currencies, languages } from "@/constants/data";
+import LanguageSelect from "@/components/ui/LanguageSelect";
 
 export default function SettingsModal() {
   const intl = useIntl();
@@ -45,6 +38,11 @@ export default function SettingsModal() {
 
   const [isLanguageModalVisible, setLanguageModalVisible] = useState(false);
   const [isCurrencyModalVisible, setCurrencyModalVisible] = useState(false);
+
+  const handleSettings = (value: string) => {
+    setSettingsData(prev => ({ ...prev, language: value }));
+    setLanguageModalVisible(false);
+  };
 
   useEffect(() => {
     setSettingsData({
@@ -115,7 +113,7 @@ export default function SettingsModal() {
               >
                 <Typo color={colors.neutral100}>
                   {
-                    CURRENCIES.find(c => c.value === settingsData.currency)
+                    Currencies.find(c => c.value === settingsData.currency)
                       ?.label
                   }
                 </Typo>
@@ -134,31 +132,11 @@ export default function SettingsModal() {
       </View>
 
       {/* Language Selection Modal */}
-      <Modal
-        isVisible={isLanguageModalVisible}
-        onBackdropPress={() => setLanguageModalVisible(false)}
-      >
-        <View style={styles.modalContent}>
-          <Typo style={styles.modalTitle}>
-            <FormattedMessage id="settingsModal.selectLanguage" />
-          </Typo>
-          <FlatList
-            data={languages}
-            keyExtractor={item => item.value}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.option}
-                onPress={() => {
-                  setSettingsData(prev => ({ ...prev, language: item.value }));
-                  setLanguageModalVisible(false);
-                }}
-              >
-                <Typo color={colors.neutral100}>{item.label}</Typo>
-              </TouchableOpacity>
-            )}
-          />
-        </View>
-      </Modal>
+      <LanguageSelect
+        isLanguageModalVisible={isLanguageModalVisible}
+        setLanguageModalVisible={setLanguageModalVisible}
+        setSettingsData={handleSettings}
+      />
 
       {/* Currency Selection Modal */}
       <Modal
@@ -169,8 +147,9 @@ export default function SettingsModal() {
           <Typo style={styles.modalTitle}>
             <FormattedMessage id="settingsModal.selectCurrency" />
           </Typo>
+
           <FlatList
-            data={CURRENCIES}
+            data={Currencies}
             keyExtractor={item => item.value}
             renderItem={({ item }) => (
               <TouchableOpacity

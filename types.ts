@@ -149,7 +149,12 @@ export type UserDataType = {
 
 export type SettingsDataType = {
   language: string;
-  currency?: any;
+  currency?: string;
+};
+
+export type AppSettingsDataType = {
+  language: string;
+  notification?: boolean;
 };
 
 export type AuthContextType = {
@@ -182,4 +187,10 @@ export type WalletType = {
   image: any;
   uid?: string;
   created?: Date;
+};
+
+export type LanguageSelectProps = {
+  isLanguageModalVisible: boolean;
+  setLanguageModalVisible: (visible: boolean) => void;
+  setSettingsData: (value: string) => void;
 };

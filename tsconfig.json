@@ -16,6 +16,7 @@
     "app/_",
     "app/(tabs)/_",
     "app/txt",
-    "providers/LocalizationProvider.js"
+    "providers/LocalizationProvider.js",
+    "app/(auth)/_"
   ]
 }

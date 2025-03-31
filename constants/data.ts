@@ -96,3 +96,11 @@ export const languages = [
   { label: "Français", value: "fr" },
   { label: "Deutsch", value: "de" },
 ];
+
+export const Currencies = [
+  { label: "$ - USD", value: "$" },
+  { label: "₴ - UAH", value: "₴" },
+  { label: "₽ - RUB", value: "₽" },
+  { label: "₣ - CHF", value: "₣" },
+  { label: "€ - EUR", value: "€" },
+];
