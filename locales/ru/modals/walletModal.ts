@@ -16,4 +16,5 @@ export default {
   deleteWallet: "Удалить кошелек",
   placeholderWalletName: "Зарплата",
   pleaseFillAllFields: "Пожалуйста, заполните все поля",
+  success: "Операция с кошельком выполнена успешно",
 };

@@ -8,4 +8,5 @@ export default {
   save: "Speichern",
   error: "Bitte füllen Sie alle Felder aus",
   user: "Benutzer",
+  success: "Die Daten wurden erfolgreich gespeichert",
 };

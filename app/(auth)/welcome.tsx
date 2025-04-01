@@ -8,10 +8,9 @@ import Animated, { FadeIn } from "react-native-reanimated";
 import { useRouter } from "expo-router";
 import LanguageSelect from "@/components/ui/LanguageSelect";
 import appSettingsStore from "@/store/appSettingsStore";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 export default function Welcome() {
-  const intl = useIntl();
   const router = useRouter();
   const { setAppSettings, appSettings } = appSettingsStore();
   const [isLanguageModalVisible, setLanguageModalVisible] = useState(false);

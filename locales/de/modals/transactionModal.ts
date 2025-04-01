@@ -19,4 +19,8 @@ export default {
   cancel: "Abbrechen",
   delete: "Löschen",
   transactionError: "Fehler beim Senden der Transaktion",
+  success: "Die Transaktionsoperation wurde erfolgreich abgeschlossen",
+  walletPlaceholder: "Wählen Sie eine Brieftasche",
+  categoryPlaceholder: "Wählen Sie eine Kategorie",
+  uploadImage: "Bild hochladen",
 };

@@ -31,6 +31,7 @@ import CalendarPicker from "react-native-calendar-picker";
 import { format } from "date-fns";
 import { deleteTransactionData } from "@/services/transactionServices";
 import { FormattedMessage, useIntl } from "react-intl";
+import Toast from "react-native-toast-message";
 
 export default function TransactionModal() {
   const intl = useIntl();
@@ -143,6 +144,15 @@ export default function TransactionModal() {
       setLoading(true);
       const result = await createOrUpdateTransactionData(data);
       if (result.success) {
+        Toast.show({
+          type: "success",
+          position: "top",
+          // text1: "Error",
+          text2: intl.formatMessage({ id: "transactionModal.success" }),
+          visibilityTime: 2000,
+          autoHide: true,
+          topOffset: 50,
+        });
         router.back();
       } else {
         Alert.alert(
@@ -261,7 +271,15 @@ export default function TransactionModal() {
                 itemTextStyle={styles.dropDownItemText}
                 containerStyle={styles.dropDownListContainer}
                 itemContainerStyle={styles.dropDownItemContainer}
-                placeholderStyle={styles.dropDownPlaceholder}
+                placeholderStyle={[
+                  styles.dropDownPlaceholder,
+                  {
+                    color:
+                      wallets?.length <= 0
+                        ? colors.neutral700
+                        : colors.neutral300,
+                  },
+                ]}
                 selectedTextStyle={styles.dropDownSelectText}
                 iconStyle={styles.dropDownIcon}
                 data={localizedTransactionTypes}
@@ -335,7 +353,9 @@ export default function TransactionModal() {
                 // inputSearchStyle={styles.inputSearchStyle}
                 // search
                 // searchPlaceholder="Search..."
-                placeholder={"Select Wallet"}
+                placeholder={intl.formatMessage({
+                  id: `transactionModal.walletPlaceholder`,
+                })}
                 maxHeight={300}
                 labelField="label"
                 valueField="value"
@@ -367,14 +387,24 @@ export default function TransactionModal() {
                   itemTextStyle={styles.dropDownItemText}
                   containerStyle={styles.dropDownListContainer}
                   itemContainerStyle={styles.dropDownItemContainer}
-                  placeholderStyle={styles.dropDownPlaceholder}
+                  placeholderStyle={[
+                    styles.dropDownPlaceholder,
+                    {
+                      color:
+                        wallets?.length <= 0
+                          ? colors.neutral700
+                          : colors.neutral300,
+                    },
+                  ]}
                   selectedTextStyle={styles.dropDownSelectText}
                   iconStyle={styles.dropDownIcon}
                   data={Object.values(localizedExpenseCategories)}
                   // inputSearchStyle={styles.inputSearchStyle}
                   // search
                   // searchPlaceholder="Search..."
-                  placeholder={"Select Wallet"}
+                  placeholder={intl.formatMessage({
+                    id: `transactionModal.categoryPlaceholder`,
+                  })}
                   maxHeight={300}
                   labelField="label"
                   valueField="value"
@@ -464,7 +494,9 @@ export default function TransactionModal() {
                 </Typo>
               </View>
               <Input
-                placeholder="Description"
+                placeholder={intl.formatMessage({
+                  id: `transactionModal.description`,
+                })}
                 containerStyle={{
                   flexDirection: "row",
                   height: verticalScale(100),
@@ -499,7 +531,9 @@ export default function TransactionModal() {
                 url={transactionData.image}
                 onClear={handleImageUrlChange}
                 onSelect={handleImageUrlChange}
-                placeholder="Upload image"
+                placeholder={intl.formatMessage({
+                  id: `transactionModal.uploadImage`,
+                })}
               />
             </View>
           </ScrollView>

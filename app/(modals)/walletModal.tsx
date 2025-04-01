@@ -18,6 +18,7 @@ import { WalletType } from "@/types";
 import useAuthStore from "@/store/authStore";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { FormattedMessage, useIntl } from "react-intl";
+import Toast from "react-native-toast-message";
 
 export default function WalletModal() {
   const intl = useIntl();
@@ -58,6 +59,15 @@ export default function WalletModal() {
       const result = await createOrUpdateWalletData(data);
 
       if (result.success) {
+        Toast.show({
+          type: "success",
+          position: "top",
+          // text1: "Error",
+          text2: intl.formatMessage({ id: "walletModal.success" }),
+          visibilityTime: 2000,
+          autoHide: true,
+          topOffset: 50,
+        });
         router.back();
       } else {
         Alert.alert(

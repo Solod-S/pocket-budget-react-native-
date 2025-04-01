@@ -5,4 +5,5 @@ export default {
   save: "Зберегти",
   selectLanguage: "Оберіть мову",
   selectCurrency: "Оберіть валюту",
+  success: " Налаштування були успішно збережені",
 };

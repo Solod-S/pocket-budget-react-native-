@@ -16,8 +16,10 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
 import useAuthStore from "@/store/authStore";
 import { FormattedMessage, useIntl } from "react-intl";
+import appSettingsStore from "@/store/appSettingsStore";
 
 export default function Register() {
+  const { appSettings } = appSettingsStore();
   const intl = useIntl();
   const { register } = useAuthStore();
   const router = useRouter();
@@ -44,7 +46,8 @@ export default function Register() {
       const { success, message } = await register(
         emailRef.current.trim(),
         passwordRef.current,
-        nameRef.current
+        nameRef.current,
+        appSettings?.language
       );
       if (!success) {
         Alert.alert(
@@ -65,7 +68,7 @@ export default function Register() {
     } finally {
       setTimeout(() => {
         setIsLoading(false);
-      }, 2000);
+      }, 4000);
     }
   };
 

@@ -25,11 +25,14 @@ import Modal from "react-native-modal";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Currencies, languages } from "@/constants/data";
 import LanguageSelect from "@/components/ui/LanguageSelect";
+import appSettingsStore from "@/store/appSettingsStore";
+import Toast from "react-native-toast-message";
 
 export default function SettingsModal() {
   const intl = useIntl();
   const router = useRouter();
   const { user, updateUserData } = useAuthStore();
+  const { setAppSettings, appSettings } = appSettingsStore();
   const [loading, setLoading] = useState(false);
   const [settingsData, setSettingsData] = useState<SettingsDataType>({
     language: "en",
@@ -54,12 +57,22 @@ export default function SettingsModal() {
   const handleSubmit = async () => {
     try {
       setLoading(true);
+      setAppSettings({ ...appSettings, language: settingsData?.language });
       const result = await updateSettingsUser(
         user?.uid as string,
         settingsData
       );
       if (result.success) {
         updateUserData(user?.uid as string);
+        Toast.show({
+          type: "success",
+          position: "top",
+          // text1: "Error",
+          text2: intl.formatMessage({ id: "settingsModal.success" }),
+          visibilityTime: 2000,
+          autoHide: true,
+          topOffset: 50,
+        });
         router.back();
       } else {
         Alert.alert(

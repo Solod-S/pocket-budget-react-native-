@@ -26,6 +26,7 @@ import { UserDataType, UserType } from "@/types";
 import useAuthStore from "@/store/authStore";
 import { useRouter } from "expo-router";
 import { FormattedMessage, useIntl } from "react-intl";
+import Toast from "react-native-toast-message";
 
 export default function ProfileModal() {
   const intl = useIntl();
@@ -53,7 +54,7 @@ export default function ProfileModal() {
   };
 
   const handleSubmit = async () => {
-    let { name, image } = userData;
+    let { name } = userData;
     if (!name.trim()) {
       Alert.alert(
         intl.formatMessage({ id: "profileModal.user" }),
@@ -68,6 +69,15 @@ export default function ProfileModal() {
 
       if (result.success) {
         updateUserData(user?.uid as string);
+        Toast.show({
+          type: "success",
+          position: "top",
+          // text1: "Error",
+          text2: intl.formatMessage({ id: "profileModal.success" }),
+          visibilityTime: 2000,
+          autoHide: true,
+          topOffset: 50,
+        });
         router.back();
       } else {
         Alert.alert(

@@ -27,7 +27,8 @@ interface AuthState {
   register: (
     email: string,
     password: string,
-    name: string
+    name: string,
+    language: string
   ) => Promise<{ success: boolean; data?: FirebaseUser; message?: string }>;
   resetPassword: (
     email: string
@@ -89,7 +90,7 @@ const useAuthStore = create<AuthState>(set => ({
     }
   },
 
-  register: async (email, password, name) => {
+  register: async (email, password, name, language) => {
     try {
       const response = await createUserWithEmailAndPassword(
         auth,
@@ -106,7 +107,7 @@ const useAuthStore = create<AuthState>(set => ({
         email,
         name,
         uid: user.uid,
-        language: "en",
+        language: language || "en",
         currency: "$",
         lastGeneratedAt: null,
       });

@@ -19,4 +19,8 @@ export default {
   cancel: "Annuler",
   delete: "Supprimer",
   transactionError: "Erreur lors de l'envoi de la transaction",
+  success: "L'opération de transaction a été effectuée avec succès",
+  walletPlaceholder: "Sélectionnez un portefeuille",
+  categoryPlaceholder: "Sélectionnez une catégorie",
+  uploadImage: "Télécharger une image",
 };

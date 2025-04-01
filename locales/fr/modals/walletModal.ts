@@ -16,4 +16,5 @@ export default {
   deleteWallet: "Supprimer",
   placeholderWalletName: "Salaire",
   pleaseFillAllFields: "Veuillez remplir tous les champs",
+  success: "L'opération du portefeuille a été effectuée avec succès",
 };

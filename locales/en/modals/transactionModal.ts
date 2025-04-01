@@ -18,4 +18,8 @@ export default {
   cancel: "Cancel",
   delete: "Delete",
   transactionError: "Error in submitting transaction",
+  success: "The transaction operation was completed successfully",
+  walletPlaceholder: "Select Wallet",
+  categoryPlaceholder: "Select Category",
+  uploadImage: "Upload image",
 };

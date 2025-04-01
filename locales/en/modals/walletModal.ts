@@ -16,4 +16,5 @@ export default {
   deleteWallet: "Delete Wallet",
   placeholderWalletName: "Salary",
   pleaseFillAllFields: "Please fill all the fields",
+  success: "The wallet operation was completed successfully",
 };

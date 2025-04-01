@@ -18,4 +18,8 @@ export default {
   cancel: "Отмена",
   delete: "Удалить",
   transactionError: "Ошибка при отправке транзакции",
+  success: "Операция с транзакцией выполнена успешно",
+  walletPlaceholder: "Выберите кошелек",
+  categoryPlaceholder: "Выберите категорию",
+  uploadImage: "Загрузить изображение",
 };

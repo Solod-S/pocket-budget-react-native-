@@ -5,4 +5,5 @@ export default {
   save: "Enregistrer",
   selectLanguage: "Sélectionnez la langue",
   selectCurrency: "Sélectionnez la monnaie",
+  success: "Les paramètres ont été enregistrés avec succès",
 };

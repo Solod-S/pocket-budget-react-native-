@@ -8,4 +8,6 @@ export default {
   save: "Save",
   error: "Please fill all the fields",
   alertTitle: "User",
+  user: "User",
+  success: "The data was saved successfully",
 };

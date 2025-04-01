@@ -4,6 +4,7 @@ import Toast from "react-native-toast-message";
 import { ReactNode, useEffect } from "react";
 import useAuthStore from "../store/authStore";
 import LocalizationProvider from "@/providers/LocalizationProvider";
+import { toastConfig } from "@/constants/toastConfig";
 
 type MainLayoutProps = {
   children: ReactNode;
@@ -67,7 +68,7 @@ const RootLayout = () => {
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="index" options={{ headerShown: false }} />
         </Stack>
-        <Toast />
+        <Toast config={toastConfig} />
       </LocalizationProvider>
     </MainLayout>
   );

@@ -19,4 +19,8 @@ export default {
   cancel: "Скасувати",
   delete: "Видалити",
   transactionError: "Помилка при відправці транзакції",
+  success: "Операція з транзакцією виконана успішно",
+  walletPlaceholder: "Оберіть гаманець",
+  categoryPlaceholder: "Оберіть категорію",
+  uploadImage: "Завантажити зображення",
 };

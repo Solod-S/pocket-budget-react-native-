@@ -16,4 +16,5 @@ export default {
   deleteWallet: "Видалити гаманець",
   placeholderWalletName: "Зарплата",
   pleaseFillAllFields: "Будь ласка, заповніть усі поля",
+  success: "Операція з гаманцем виконана успішно",
 };

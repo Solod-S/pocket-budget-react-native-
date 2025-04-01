@@ -8,4 +8,5 @@ export default {
   save: "Enregistrer",
   error: "Veuillez remplir tous les champs",
   user: "Utilisateur",
+  success: "Les données ont été enregistrées avec succès",
 };

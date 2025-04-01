@@ -20,7 +20,6 @@ const appSettingsStore = create<AuthState>(set => ({
 
   loadAppSettings: async () => {
     const storedSettings = await AsyncStorage.getItem("appSettings");
-
     if (storedSettings) {
       set(() => ({ appSettings: JSON.parse(storedSettings) }));
     }

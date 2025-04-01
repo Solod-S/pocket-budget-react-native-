@@ -46,7 +46,7 @@ export default function Login() {
         emailRef.current.trim(),
         passwordRef.current
       );
-      setIsLoading(false);
+
       if (!response.success) {
         Alert.alert(
           intl.formatMessage({
@@ -60,7 +60,7 @@ export default function Login() {
     } finally {
       setTimeout(() => {
         setIsLoading(false);
-      }, 2000);
+      }, 4000);
     }
   };
 
