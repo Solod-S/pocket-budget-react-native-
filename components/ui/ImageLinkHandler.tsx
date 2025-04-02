@@ -10,6 +10,7 @@ import { getFilePath } from "@/services";
 import { Button } from "./Button";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Input } from "./Input";
+import { FormattedMessage, useIntl } from "react-intl";
 
 export const ImageLinkHandler = ({
   url = null,
@@ -19,6 +20,7 @@ export const ImageLinkHandler = ({
   imageStyle,
   placeholder,
 }: ImageUploadProps) => {
+  const intl = useIntl();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>(
     typeof url === "string" ? url : ""
@@ -63,10 +65,14 @@ export const ImageLinkHandler = ({
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Edit Image URL</Text>
+            <Text style={styles.modalTitle}>
+              <FormattedMessage id="profileModal.editImageTitle" />
+            </Text>
 
             <Input
-              placeholder="Enter image URL"
+              placeholder={intl.formatMessage({
+                id: "profileModal.enterImageUrl",
+              })}
               value={imageUrl}
               onChangeText={text => setImageUrl(text)}
             />
@@ -83,7 +89,9 @@ export const ImageLinkHandler = ({
 
             <View style={styles.modalButtons}>
               <Button onPress={handleCancelEdit} style={styles.cancelButton}>
-                <Typo color={colors.neutral100}>Cancel</Typo>
+                <Typo color={colors.neutral100}>
+                  <FormattedMessage id="profileModal.cancel" />
+                </Typo>
               </Button>
               <Button
                 onPress={() => {
@@ -92,7 +100,9 @@ export const ImageLinkHandler = ({
                 }}
                 style={styles.saveButton}
               >
-                <Typo color={colors.neutral100}>Save</Typo>
+                <Typo color={colors.neutral100}>
+                  <FormattedMessage id="profileModal.save" />
+                </Typo>
               </Button>
             </View>
           </View>

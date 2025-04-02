@@ -62,13 +62,37 @@ export default function SettingsModal() {
         user?.uid as string,
         settingsData
       );
+
       if (result.success) {
         updateUserData(user?.uid as string);
+        let msg = "The settings were saved successfully";
+
+        switch (true) {
+          case settingsData.language === "en":
+            msg = "The settings were saved successfully";
+            break;
+          case settingsData.language === "uk":
+            msg = "Налаштування було успішно збережено";
+            break;
+          case settingsData.language === "ru":
+            msg = "Настройки были успешно сохранены";
+            break;
+          case settingsData.language === "fr":
+            msg = "Les paramètres ont été enregistrés avec succès";
+            break;
+          case settingsData.language === "de":
+            msg = "Die Einstellungen wurden erfolgreich gespeichert";
+            break;
+
+          default:
+            break;
+        }
+
         Toast.show({
           type: "success",
           position: "top",
           // text1: "Error",
-          text2: intl.formatMessage({ id: "settingsModal.success" }),
+          text2: msg,
           visibilityTime: 2000,
           autoHide: true,
           topOffset: 50,

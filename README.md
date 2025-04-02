@@ -3,6 +3,7 @@
 [![runs with React Native](https://img.shields.io/badge/Runs%20with%20RN-000.svg?style=flat-square&logo=react&labelColor=f3f3f3&logoColor=61DAFB)](https://reactnative.dev/)
 [![runs with TypeScript](https://img.shields.io/badge/Runs%20with%20TypeScript-000.svg?style=flat-square&logo=typescript&labelColor=f3f3f3&logoColor=3178C6)](https://www.typescriptlang.org/)
 [![runs with Expo](https://img.shields.io/badge/Runs%20with%20Expo-000.svg?style=flat-square&logo=expo&labelColor=f3f3f3&logoColor=000020)](https://expo.dev/)
+[![Runs with react-intl](https://img.shields.io/badge/Runs%20with%20React%20Intl-000.svg?style=flat-square&logo=react&labelColor=f3f3f3&logoColor=6F3C97)](https://formatjs.github.io/docs/getting-started/installation/)
 [![runs with React Native Vector Icons](https://img.shields.io/badge/Runs%20with%20RN%20Vector%20Icons-000.svg?style=flat-square&logo=react&labelColor=f3f3f3&logoColor=61DAFB)](https://github.com/oblador/react-native-vector-icons)
 [![runs with React Native Reanimated](https://img.shields.io/badge/Runs%20with%20RN%20Reanimated-000.svg?style=flat-square&logo=react&labelColor=f3f3f3&logoColor=61DAFB)](https://github.com/software-mansion/react-native-reanimated)
 [![Runs with Firebase](https://img.shields.io/badge/Runs%20with%20Firebase-000.svg?style=flat-square&logo=firebase&labelColor=f3f3f3&logoColor=FFCA28)](https://firebase.google.com/)
@@ -27,13 +28,13 @@ Key Features:
 
 Pocket Budget – your reliable tool for financial control and smart budgeting! 💰📊
 
- <!-- <div align="center">
+<div align="center">
  <br />
  
-![Pocket Budget](/assets/video.gif)
+![Pocket Budget](/assets/IMG_1121.gif)
 
   <br />
-</div> -->
+</div>
 
 **Main Technologies:**
 
@@ -42,6 +43,8 @@ Pocket Budget – your reliable tool for financial control and smart budgeting! 
 – TypeScript: TypeScript is a powerful, statically typed programming language that builds on JavaScript, providing developers with enhanced tooling and error checking. Designed for building large-scale applications, it helps catch potential issues early through type annotations, making code more robust and maintainable. TypeScript seamlessly integrates with JavaScript, enabling incremental adoption while improving developer productivity and collaboration.
 
 – Expo: A powerful framework and platform for developing React Native applications. It offers a managed workflow, over-the-air updates, and access to native APIs without requiring native code, simplifying the development process.
+
+– React Intl: A robust internationalization library for React, used to localize applications with support for multiple languages. Enables seamless translation of text, dates, and numbers, ensuring smooth multilingual experiences. In this project, it handles localization for 5 languages.
 
 – React Native Vector Icons: A library providing a vast collection of customizable vector icons for React Native applications. It supports multiple icon sets, enabling developers to easily enhance UI elements with scalable icons.
 
@@ -53,7 +56,7 @@ Pocket Budget – your reliable tool for financial control and smart budgeting! 
 
 – Lottie (lottie-react-native): A library for rendering high-quality vector animations in React Native. It allows developers to use JSON-based animations created in Adobe After Effects, improving app interactivity and visual appeal.
 
-<!-- – React Native Toast Message: A simple and customizable toast notification library for React Native, making it easy to display quick messages, alerts, and confirmations in mobile applications. -->
+– React Native Toast Message: A simple and customizable toast notification library for React Native, making it easy to display quick messages, alerts, and confirmations in mobile applications.
 
 ## How to Install and Run Your React Native App Using Expo
 

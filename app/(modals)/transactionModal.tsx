@@ -513,7 +513,7 @@ export default function TransactionModal() {
                 }
               />
             </View>
-            <View
+            {/* <View
               style={[
                 styles.inputContainer,
                 { paddingHorizontal: spacingX._20 },
@@ -535,7 +535,7 @@ export default function TransactionModal() {
                   id: `transactionModal.uploadImage`,
                 })}
               />
-            </View>
+            </View> */}
           </ScrollView>
         </CustomKeyboardView>
         <View style={styles.footer}>
